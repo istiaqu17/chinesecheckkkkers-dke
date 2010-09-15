@@ -1,5 +1,7 @@
 package ChineseCheckers;
 
+import java.awt.Color;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -12,10 +14,9 @@ package ChineseCheckers;
 public class Piece {
     private int x;
     private int y;
-    private int colour;
-    public static final int BLUE = 0, YELLOW = 1, GREEN = 2, RED = 3, BLACK = 4, WHITE = 5, PURPLE = 6;
+    private Color colour;
 
-    public Piece(int initX, int initY, int team){
+    public Piece(int initX, int initY, Color team){
         x = initX;
         y = initY;
         colour = team;
@@ -29,7 +30,7 @@ public class Piece {
         return y;
     }
 
-    public int getColour(){
+    public Color getColour(){
         return colour;
     }
 
