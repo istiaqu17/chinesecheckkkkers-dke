@@ -16,6 +16,7 @@ public class Move {
         for(int i = 0; i < positions.length-1; i++) {
             piece = positions[i].getPiece();
             positions[i+1].addPiece(piece);
+            positions[i].removePiece();
         }
     }
 }
