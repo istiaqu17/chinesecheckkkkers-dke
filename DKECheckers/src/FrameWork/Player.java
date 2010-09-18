@@ -1,5 +1,7 @@
 package FrameWork;
 
+import java.awt.Color;
+
 /**
  *  
  * @author Sara van de Moosdijk
@@ -15,12 +17,12 @@ public interface Player
 	void makeMove();
 	
 	//A player will have an assigned color.
-	void setColor();
-	String getColor();
+	void setColor(Color aColor);
+	Color getColor();
 	
 	//It would be nice to let (human) players insert their name.
 	//AI bots will of course get standard names.
-	void setName();
+	void setName(String aName);
 	String getName();
 }
 
