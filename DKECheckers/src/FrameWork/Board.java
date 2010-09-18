@@ -3,6 +3,7 @@ package FrameWork;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 /**
  *
@@ -10,12 +11,19 @@ import javax.swing.JPanel;
  */
 public class Board extends JPanel {
 
-    Position[][] positions = new Position[17][17];
+    private Position[][] positions = new Position[17][17];
     private int[] mouseClickLocation = new int[]{-1, -1};
     private int[] mouseHoverLocation = new int[]{-1, -1};
     private int[][] rowLengths = new int[][]{{4, 1}, {4, 2}, {4, 3}, {4, 4}, {0, 13}, {1, 12}, {2, 11}, {3, 10}, {4, 9}, {4, 10}, {4, 11}, {4, 12}, {4, 13}, {9, 4}, {10, 3}, {11, 2}, {12, 1}};
     private Position[][] playerBases;
     private Color[] colors = new Color[]{Color.YELLOW, Color.BLUE, Color.RED, Color.GREEN, Color.ORANGE, Color.MAGENTA};
+    private Piece selectedPiece;
+    private Piece movingPiece;
+    private Position[] movingPiecePositions;
+    private double[] movingPieceCoordinates;
+    private Timer timer;
+    private int moveRepeats = 0;
+
     public Board(int size) {
         this.setSize(size, size);
         createBoard();
@@ -25,11 +33,10 @@ public class Board extends JPanel {
         resetPlayerBase(3);
         resetPlayerBase(4);
         resetPlayerBase(5);
-
     }
 
-     public void resetPlayerBase(int x){
-        for (int i = 0; i < playerBases[x].length; i++){
+    public void resetPlayerBase(int x) {
+        for (int i = 0; i < playerBases[x].length; i++) {
             playerBases[x][i].addPiece(new Piece(colors[x]));
         }
     }
@@ -41,7 +48,7 @@ public class Board extends JPanel {
             }
             for (int j = rowLengths[i][0]; j < rowLengths[i][0] + rowLengths[i][1]; j++) {
                 int x = (positions.length - i - 13) * (this.getWidth() / (2 * positions.length)) + j * (this.getWidth() / (positions.length));
-                int y =  i * (this.getWidth() / (positions.length));
+                int y = i * (this.getWidth() / (positions.length));
                 positions[i][j] = new Position(x, y, null);
             }
             for (int j = rowLengths[i][0] + rowLengths[i][1]; j < rowLengths.length; j++) {
@@ -63,6 +70,8 @@ public class Board extends JPanel {
         class boardClicked implements MouseListener {
 
             public void mouseClicked(MouseEvent e) {
+                movingPiecePositions = new Position[]{positions[3][4], positions[4][5], positions[4][6], positions[4][5], positions[3][4]};
+                movePiece(movingPiecePositions);
                 mouseClickLocation = getPosition(e.getX(), e.getY());
                 repaint();
             }
@@ -81,24 +90,19 @@ public class Board extends JPanel {
         }
         addMouseMotionListener(new boardHovered());
         addMouseListener(new boardClicked());
-        playerBases  = new Position[][]{{positions[0][4], positions[1][4], positions[1][5], positions[2][4], positions[2][5], 
-                                                positions[2][6], positions[3][4], positions[3][5], positions[3][6], positions[3][7]},
-                                         
-                                        {positions[4][0], positions[4][1], positions[4][2], positions[4][3], positions[5][1], 
-                                                positions[5][2], positions[5][3], positions[6][2], positions[6][3], positions[7][3]},
-
-                                        {positions[9][4], positions[10][4], positions[10][5], positions[11][4], positions[11][5],
-                                                positions[11][6], positions[12][4], positions[12][5], positions[12][6], positions[12][7]},
-
-                                        {positions[13][9], positions[13][10], positions[13][11], positions[13][12], positions[14][10],
-                                                positions[14][11], positions[14][12], positions[15][11], positions[15][12], positions[16][12]},
-
-                                        {positions[9][13], positions[10][13], positions[10][14], positions[11][13], positions[11][14],
-                                                positions[11][15], positions[12][13], positions[12][14], positions[12][15], positions[12][16]},
-
-                                        {positions[4][9], positions[4][10], positions[4][11], positions[4][12], positions[5][10],
-                                                positions[5][11], positions[5][12], positions[6][11], positions[6][12], positions[7][12]}
-            };
+        playerBases = new Position[][]{{positions[0][4], positions[1][4], positions[1][5], positions[2][4], positions[2][5],
+                        positions[2][6], positions[3][4], positions[3][5], positions[3][6], positions[3][7]},
+                    {positions[4][0], positions[4][1], positions[4][2], positions[4][3], positions[5][1],
+                        positions[5][2], positions[5][3], positions[6][2], positions[6][3], positions[7][3]},
+                    {positions[9][4], positions[10][4], positions[10][5], positions[11][4], positions[11][5],
+                        positions[11][6], positions[12][4], positions[12][5], positions[12][6], positions[12][7]},
+                    {positions[13][9], positions[13][10], positions[13][11], positions[13][12], positions[14][10],
+                        positions[14][11], positions[14][12], positions[15][11], positions[15][12], positions[16][12]},
+                    {positions[9][13], positions[10][13], positions[10][14], positions[11][13], positions[11][14],
+                        positions[11][15], positions[12][13], positions[12][14], positions[12][15], positions[12][16]},
+                    {positions[4][9], positions[4][10], positions[4][11], positions[4][12], positions[5][10],
+                        positions[5][11], positions[5][12], positions[6][11], positions[6][12], positions[7][12]}
+                };
     }
 
     public int[] getPosition(int x, int y) {
@@ -148,23 +152,76 @@ public class Board extends JPanel {
                 if (positions[i][j] != null) {
                     int width = (int) (this.getWidth() / (positions.length));
                     g2.setColor(Color.LIGHT_GRAY);
-                    g2.fillOval((int) positions[i][j].getX() + (int) (0.05 * width), (int) positions[i][j].getY()  + (int) (0.05 * width), (int) (0.9 * width), (int) (0.9 * width));
+                    g2.fillOval((int) positions[i][j].getX() + (int) (0.05 * width), (int) positions[i][j].getY() + (int) (0.05 * width), (int) (0.9 * width), (int) (0.9 * width));
                     if (positions[i][j].getPiece() != null) {
                         g2.setColor(positions[i][j].getPiece().getColor());
-                        g2.fillOval((int) (positions[i][j].getX()  + (0.1 * width)), (int) (positions[i][j].getY()  + (0.1 * width)), (int) (0.8 * width), (int) (0.8 * width));
+                        g2.fillOval((int) (positions[i][j].getX() + (0.1 * width)), (int) (positions[i][j].getY() + (0.1 * width)), (int) (0.8 * width), (int) (0.8 * width));
                     }
                     if (i == mouseHoverLocation[1] && j == mouseHoverLocation[0]) {
-                        g2.setStroke(new BasicStroke(4f));
+                        g2.setStroke(new BasicStroke(5f));
                         g2.setColor(Color.DARK_GRAY);
-                        g2.drawOval((int) (positions[i][j].getX()  + (0.05 * width)), (int) (positions[i][j].getY()  + (0.05 * width)), (int) (0.9 * width), (int) (0.9 * width));
+                        g2.drawOval((int) (positions[i][j].getX() + (0.05 * width)), (int) (positions[i][j].getY() + (0.05 * width)), (int) (0.9 * width), (int) (0.9 * width));
                     }
                     if (i == mouseClickLocation[1] && j == mouseClickLocation[0]) {
-                        g2.setStroke(new BasicStroke(4f));
+                        g2.setStroke(new BasicStroke(5f));
                         g2.setColor(Color.BLACK);
-                        g2.drawOval((int) (positions[i][j].getX()  + (0.05 * width)), (int) (positions[i][j].getY()  + (0.05 * width)), (int) (0.9 * width), (int) (0.9 * width));
+                        g2.drawOval((int) (positions[i][j].getX() + (0.05 * width)), (int) (positions[i][j].getY() + (0.05 * width)), (int) (0.9 * width), (int) (0.9 * width));
+                    }
+                    if (movingPiece != null) {
+                        g2.setColor(movingPiece.getColor());
+                        g2.fillOval((int) (movingPieceCoordinates[0] + (0.1 * width)), (int) (movingPieceCoordinates[1] + (0.1 * width)), (int) (0.8 * width), (int) (0.8 * width));
                     }
                 }
             }
         }
+    }
+
+    public void movePiece(Position[] position) {
+        Piece piece = position[0].getPiece();
+        position[0].removePiece();
+        movingPiece = piece;
+        movingPieceCoordinates = new double[]{position[0].getX(), position[0].getY()};
+        class TimerListener implements ActionListener {
+
+            public void actionPerformed(ActionEvent e) {
+                advanceMovingPiece();
+            }
+        }
+        timer = new Timer(10, new TimerListener());
+        timer.start();
+        repaint();
+    }
+
+    private void advanceMovingPiece() {
+        int speed = 50;
+        double dX = movingPiecePositions[1].getX() - movingPiecePositions[0].getX();
+        double dY = movingPiecePositions[1].getY() - movingPiecePositions[0].getY();
+        movingPieceCoordinates[0] += dX / speed;
+        movingPieceCoordinates[1] += dY / speed;
+        moveRepeats++;
+        if (moveRepeats == speed) {
+            moveRepeats = 0;
+            timer.stop();
+            resetMovingPiece();
+            if (movingPiecePositions.length > 2) {
+                Position[] copy = new Position[movingPiecePositions.length];
+                for (int i = 0; i < movingPiecePositions.length; i++) {
+                    copy[i] = movingPiecePositions[i];
+                }
+                movingPiecePositions = new Position[movingPiecePositions.length - 1];
+                for (int i = 0; i < copy.length - 1; i++) {
+                    movingPiecePositions[i] = copy[i + 1];
+                }
+                movePiece(movingPiecePositions);
+
+            }
+        }
+        repaint();
+    }
+
+    private void resetMovingPiece() {
+        movingPiecePositions[1].addPiece(movingPiece);
+        movingPiece = null;
+        repaint();
     }
 }

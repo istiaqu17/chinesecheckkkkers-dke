@@ -5,21 +5,20 @@ package FrameWork;
  * @author Stefan
  */
 public class Position {
-    private int x;
-    private int y;
+    private double x,y;
     private Piece piece;
 
-    public Position(int initX, int initY, Piece p){
+    public Position(double initX, double initY, Piece p){
         x = initX;
         y = initY;
         piece = p;
     }
 
-    public int getX(){
+    public double getX(){
         return x;
     }
 
-    public int getY(){
+    public double getY(){
         return y;
     }
 
@@ -31,7 +30,7 @@ public class Position {
         if(!occupied())
             piece = p;
         else
-            System.out.println("Already a piece on this position");
+            System.out.println("Already a piece on position: " + this.x + " " + this.y);
     }
 
     public void removePiece(){
