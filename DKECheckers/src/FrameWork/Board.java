@@ -18,12 +18,17 @@ public class Board extends JPanel {
     private Position[][] playerBases;
     private Color[] colors = new Color[]{Color.YELLOW, Color.BLUE, Color.RED, Color.GREEN, Color.ORANGE, Color.MAGENTA};
     private Piece selectedPiece;
+    private Position selectedPosition;
     private Piece movingPiece;
     private Position[] movingPiecePositions;
     private double[] movingPieceCoordinates;
     private Timer timer;
     private int moveRepeats = 0;
+    private boolean allowMouseInput;
 
+    /*
+     * Constructor
+     */
     public Board(int size) {
         this.setSize(size, size);
         createBoard();
@@ -33,15 +38,25 @@ public class Board extends JPanel {
         resetPlayerBase(3);
         resetPlayerBase(4);
         resetPlayerBase(5);
+        allowMouseInput = true;
     }
 
+    /*
+     * Resets the starting base of a player by placing all 10 pieces in the starting triangle
+     */
     public void resetPlayerBase(int x) {
         for (int i = 0; i < playerBases[x].length; i++) {
             playerBases[x][i].addPiece(new Piece(colors[x]));
         }
     }
 
+    /*
+     * Creates all the positions on the board. Position in the 17-17 array which are not on the board will be null.
+     */
     private void createBoard() {
+        /*
+         * See the paper with the 17x17 array for explanation of the way the board is saved
+         */
         for (int i = 0; i < rowLengths.length; i++) {
             for (int j = 0; j < rowLengths[i][0]; j++) {
                 positions[i][j] = null;
@@ -56,24 +71,48 @@ public class Board extends JPanel {
             }
         }
 
+        /*
+         * Handles when the mouse is moved over the board
+         */
         class boardHovered implements MouseMotionListener {
 
             public void mouseDragged(MouseEvent e) {
             }
 
             public void mouseMoved(MouseEvent e) {
-                mouseHoverLocation = getPosition(e.getX(), e.getY());
-                repaint();
+                if (allowMouseInput) {
+                    mouseHoverLocation = getPosition(e.getX(), e.getY());
+                    repaint();
+                }
             }
         }
 
+        /*
+         * Handles when the board is clicked
+         */
         class boardClicked implements MouseListener {
 
             public void mouseClicked(MouseEvent e) {
-                movingPiecePositions = new Position[]{positions[3][4], positions[4][5], positions[4][6], positions[4][5], positions[3][4]};
-                movePiece(movingPiecePositions);
-                mouseClickLocation = getPosition(e.getX(), e.getY());
-                repaint();
+//                movingPiecePositions = new Position[]{positions[3][4], positions[4][5], positions[4][6], positions[4][5], positions[3][4]};
+//                movePiece(movingPiecePositions);
+                if (allowMouseInput) {
+                    mouseClickLocation = getPosition(e.getX(), e.getY());
+                    if (mouseClickLocation[0] != -1 && positions[mouseClickLocation[1]][mouseClickLocation[0]] != null) {
+                        if (positions[mouseClickLocation[1]][mouseClickLocation[0]].getPiece() != null) {
+                            selectedPiece = positions[mouseClickLocation[1]][mouseClickLocation[0]].getPiece();
+                            movingPiecePositions = new Position[]{positions[mouseClickLocation[1]][mouseClickLocation[0]], null};
+                        } else if (selectedPiece != null) {
+                            selectedPosition = positions[mouseClickLocation[1]][mouseClickLocation[0]];
+                            movingPiecePositions[1] = positions[mouseClickLocation[1]][mouseClickLocation[0]];
+                            movePiece(movingPiecePositions);
+                            resetMouseInput();
+                        } else {
+                            selectedPiece = null;
+                            selectedPosition = null;
+                        }
+                    }
+                    repaint();
+                }
             }
 
             public void mousePressed(MouseEvent e) {
@@ -90,6 +129,9 @@ public class Board extends JPanel {
         }
         addMouseMotionListener(new boardHovered());
         addMouseListener(new boardClicked());
+        /*
+         * Starting bases for each of the six players
+         */
         playerBases = new Position[][]{{positions[0][4], positions[1][4], positions[1][5], positions[2][4], positions[2][5],
                         positions[2][6], positions[3][4], positions[3][5], positions[3][6], positions[3][7]},
                     {positions[4][0], positions[4][1], positions[4][2], positions[4][3], positions[5][1],
@@ -105,6 +147,9 @@ public class Board extends JPanel {
                 };
     }
 
+    /*
+     * Calculates which position the mouse is pointing to
+     */
     public int[] getPosition(int x, int y) {
         int[] position = new int[2];
         double width = this.getWidth();
@@ -124,13 +169,19 @@ public class Board extends JPanel {
         return position;
     }
 
+    /*
+     * Checks if a certain move is valid. Work in Progress
+     */
     public boolean isValidMove(Position start, Position end) {
         boolean validMove = true;
+        // The start and end position have to be on the board
         if (start != null || end != null) {
             validMove = false;
-        } else if (start.equals(end)) {
+        } // The start and end position have to be different
+        else if (start.equals(end)) {
             validMove = false;
-        } else if (Math.abs(start.getY() - end.getY()) > 1) {
+        } // Not yet right from here on, this was just a test
+        else if (Math.abs(start.getY() - end.getY()) > 1) {
             validMove = false;
         } else if (Math.abs(start.getX() - end.getX()) > 1) {
             validMove = false;
@@ -142,6 +193,9 @@ public class Board extends JPanel {
         return validMove;
     }
 
+    /*
+     * Displays the board, the pieces, the mouselocation, the valid moves etc.
+     */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
@@ -151,22 +205,27 @@ public class Board extends JPanel {
             for (int j = 0; j < positions[0].length; j++) {
                 if (positions[i][j] != null) {
                     int width = (int) (this.getWidth() / (positions.length));
+                    // All positions
                     g2.setColor(Color.LIGHT_GRAY);
                     g2.fillOval((int) positions[i][j].getX() + (int) (0.05 * width), (int) positions[i][j].getY() + (int) (0.05 * width), (int) (0.9 * width), (int) (0.9 * width));
+                    // All pieces
                     if (positions[i][j].getPiece() != null) {
                         g2.setColor(positions[i][j].getPiece().getColor());
                         g2.fillOval((int) (positions[i][j].getX() + (0.1 * width)), (int) (positions[i][j].getY() + (0.1 * width)), (int) (0.8 * width), (int) (0.8 * width));
                     }
+                    // Displays where the mouse is pointing to if the cursor is on the board
                     if (i == mouseHoverLocation[1] && j == mouseHoverLocation[0]) {
-                        g2.setStroke(new BasicStroke(5f));
+                        g2.setStroke(new BasicStroke(6f));
                         g2.setColor(Color.DARK_GRAY);
                         g2.drawOval((int) (positions[i][j].getX() + (0.05 * width)), (int) (positions[i][j].getY() + (0.05 * width)), (int) (0.9 * width), (int) (0.9 * width));
                     }
+                    // Displays which position the user has clicked
                     if (i == mouseClickLocation[1] && j == mouseClickLocation[0]) {
-                        g2.setStroke(new BasicStroke(5f));
+                        g2.setStroke(new BasicStroke(6f));
                         g2.setColor(Color.BLACK);
                         g2.drawOval((int) (positions[i][j].getX() + (0.05 * width)), (int) (positions[i][j].getY() + (0.05 * width)), (int) (0.9 * width), (int) (0.9 * width));
                     }
+                    // Displays a moving piece
                     if (movingPiece != null) {
                         g2.setColor(movingPiece.getColor());
                         g2.fillOval((int) (movingPieceCoordinates[0] + (0.1 * width)), (int) (movingPieceCoordinates[1] + (0.1 * width)), (int) (0.8 * width), (int) (0.8 * width));
@@ -176,6 +235,9 @@ public class Board extends JPanel {
         }
     }
 
+    /*
+     * Moves a piece from it's starting position to it's end position while traversing all the positions in between.
+     */
     public void movePiece(Position[] position) {
         Piece piece = position[0].getPiece();
         position[0].removePiece();
@@ -192,36 +254,54 @@ public class Board extends JPanel {
         repaint();
     }
 
+    /*
+     * Moves a piece towards the destination
+     */
     private void advanceMovingPiece() {
         int speed = 50;
+        // Direction in which a piece has to move
         double dX = movingPiecePositions[1].getX() - movingPiecePositions[0].getX();
         double dY = movingPiecePositions[1].getY() - movingPiecePositions[0].getY();
+        // Lets the piece move in small steps
         movingPieceCoordinates[0] += dX / speed;
         movingPieceCoordinates[1] += dY / speed;
         moveRepeats++;
+        // If the number op steps taken is equal to the speed, the piece is on the new position
         if (moveRepeats == speed) {
             moveRepeats = 0;
             timer.stop();
             resetMovingPiece();
+            // Checks if there are more positions to which the piece has to be moved in case the piece could hop over another
             if (movingPiecePositions.length > 2) {
+                // Copies the positions
                 Position[] copy = new Position[movingPiecePositions.length];
                 for (int i = 0; i < movingPiecePositions.length; i++) {
                     copy[i] = movingPiecePositions[i];
                 }
                 movingPiecePositions = new Position[movingPiecePositions.length - 1];
+                // Copies everything back except the old starting location, at this point the piece is at movingPiecePositions[1]
                 for (int i = 0; i < copy.length - 1; i++) {
                     movingPiecePositions[i] = copy[i + 1];
                 }
                 movePiece(movingPiecePositions);
-
             }
+            allowMouseInput = true;
         }
         repaint();
     }
 
+    /*
+     * Resets the moving piece so that the moving piece is placed at it's destination and is no longer shown on screen.
+     */
     private void resetMovingPiece() {
         movingPiecePositions[1].addPiece(movingPiece);
         movingPiece = null;
         repaint();
+    }
+
+    private void resetMouseInput() {
+        mouseHoverLocation = new int[]{-1, -1};
+        mouseClickLocation = new int[]{-1, -1};
+        allowMouseInput = false;
     }
 }
