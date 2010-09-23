@@ -24,5 +24,8 @@ public interface Player
 	//AI bots will of course get standard names.
 	void setName(String aName);
 	String getName();
+
+        void setGoal(Position[] goal);
+        Position[] getGoal();
 }
 
