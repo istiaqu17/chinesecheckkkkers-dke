@@ -18,8 +18,6 @@ public class GamePlay {
     public GamePlay(Board b, Player[] p){
         //the gui has the info about the players (human or AI, what AI)
         //so the gui must give the array of players
-        //I assume the number of players can only be 2,3,4,6
-        //non-playing players are just null
         //first player will begin
         board = b;
         players = p;
@@ -38,6 +36,7 @@ public class GamePlay {
     }
 
     public boolean winner(Player player){
+        //checks for the player if the goal positions are filled and if they are filled with the right color
         for(Position pos: player.getGoal()){
             if(pos.getPiece() != null){
                 if (pos.getPiece().getColor() != player.getColor())
