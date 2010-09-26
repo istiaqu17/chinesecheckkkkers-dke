@@ -13,6 +13,7 @@ public class GamePlay {
     public Board board;
     public Player turn;
     public Player[] players;
+    public Player winner;
     
 
     public GamePlay(Board b, Player[] p){
@@ -46,5 +47,23 @@ public class GamePlay {
                 return false;
         }
         return true;
+    }
+
+    public Player runGame(){
+        while(winner == null){
+            // it's a players turn, so wait until a turn is made
+            // the board has to notify() to "wake this up" again
+            try{
+                this.wait();
+            }catch(InterruptedException e){ System.out.println("Some error"); }
+
+            // now the player has made his move
+            // check if this player wins, else change turn
+            if(winner(turn))
+                winner = turn;
+            else
+                changeTurn();
+        }
+        return winner;
     }
 }

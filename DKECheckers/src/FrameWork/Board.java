@@ -314,6 +314,7 @@ public class Board extends JPanel {
             allowMouseInput = true;
         }
         repaint();
+        notify();
     }
 
     /*
