@@ -175,7 +175,7 @@ public class Board extends JPanel {
         return position;
     }
 
-    private void determineValidMoves(Position position) {
+    public void determineValidMoves(Position position) {
         int[] positionCoordinates = getPosition(position.getX(), position.getY());
         int i = positionCoordinates[1] + 1;
         int j = positionCoordinates[0] + 1;
@@ -206,6 +206,10 @@ public class Board extends JPanel {
             }
         }
         return false;
+    }
+
+    public ArrayList<Position> getValidMoves(){
+        return validMoves;
     }
 
     /*

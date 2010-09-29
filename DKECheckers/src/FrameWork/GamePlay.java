@@ -53,9 +53,16 @@ public class GamePlay {
         while(winner == null){
             // it's a players turn, so wait until a turn is made
             // the board has to notify() to "wake this up" again
-            try{
-                this.wait();
-            }catch(InterruptedException e){ System.out.println("Some error"); }
+            if(turn instanceof HumanPlayer){
+                try{
+                    this.wait();
+                }catch(InterruptedException e){ System.out.println("Some error"); }
+            }
+            else{
+                //AI player
+                turn.makeMove();
+            }
+           
 
             // now the player has made his move
             // check if this player wins, else change turn
