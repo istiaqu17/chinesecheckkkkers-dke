@@ -10,11 +10,13 @@ package FrameWork;
  * @author Stefan
  */
 public class GamePlay {
+
+    // variables should be private
     public Board board;
     public Player turn;
     public Player[] players;
     public Player winner;
-    
+
 
     public GamePlay(Board b, Player[] p){
         //the gui has the info about the players (human or AI, what AI)
@@ -22,10 +24,18 @@ public class GamePlay {
         //first player will begin
         board = b;
         players = p;
+        // make turn an integer
         turn = players[0];
     }
 
     public void changeTurn(){
+        // Way too complicated
+        /*
+         * if (turn + 1 < players.length){
+         *    turn++} else {
+         * turn = 0;}
+         */
+        // I would write this
         for(int i = 0; i<players.length; i++){
             if (turn == players[i]){
                 if(i+1 < players.length)
@@ -36,6 +46,9 @@ public class GamePlay {
         }
     }
 
+    /*
+     * Useless, since player.getGoal does not return the positions which are really on the board
+     */
     public boolean winner(Player player){
         //checks for the player if the goal positions are filled and if they are filled with the right color
         for(Position pos: player.getGoal()){

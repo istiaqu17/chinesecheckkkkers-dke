@@ -12,7 +12,8 @@
 package Test;
 
 import FrameWork.Board;
-import javax.swing.JPanel;
+import FrameWork.HumanPlayer;
+import FrameWork.Player;
 
 /**
  *
@@ -24,9 +25,10 @@ public class BoardFrame extends javax.swing.JFrame {
     public BoardFrame() {
         initComponents();
         int boardsize = 700;
-        JPanel board = new Board(boardsize);
+        Board board = new Board(boardsize, new Player[]{new HumanPlayer(), new HumanPlayer()});
         add(board);
         setSize(1000,1000);
+        Player[] p = new Player[3];
     }
 
     /** This method is called from within the constructor to
@@ -44,11 +46,11 @@ public class BoardFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 765, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 487, Short.MAX_VALUE)
         );
 
         pack();

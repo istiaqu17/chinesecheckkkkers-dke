@@ -10,13 +10,20 @@ package FrameWork;
  * @author Suzanne
  */
 public class Move {
-    public void makeMove(Position[] positions) {
+    // The class move represents a move, so it does not handle the moment a player makes a move sorry :S
+    private Position[] positions;
+    private boolean hopMove;
 
-        Piece piece = null;
-        for(int i = 0; i < positions.length-1; i++) {
-            piece = positions[i].getPiece();
-            positions[i+1].addPiece(piece);
-            positions[i].removePiece();
-        }
+    public Move(Position[] positions){
+        this.positions = positions;
+        this.hopMove = hopMove;
+    }
+
+    public Position[] getPositions(){
+        return this.positions;
+    }
+
+    public boolean isHopMove(){
+        return this.hopMove;
     }
 }
