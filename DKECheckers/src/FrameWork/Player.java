@@ -27,5 +27,7 @@ public interface Player
 
         void setGoal(Position[] goal);
         Position[] getGoal();
+
+        boolean isHuman();
 }
 

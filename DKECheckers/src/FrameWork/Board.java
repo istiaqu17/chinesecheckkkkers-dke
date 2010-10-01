@@ -40,7 +40,9 @@ public class Board extends JPanel {
         this.players = players;
         createBoard();
         turn = 0;
-        allowMouseInput = true;
+        if (players[turn].isHuman()) {
+            allowMouseInput = true;
+        }
         createTurnPanel();
     }
 
@@ -373,7 +375,9 @@ public class Board extends JPanel {
             } else {
                 nextTurn();
             }
-            allowMouseInput = true;
+            if (players[turn].isHuman()) {
+                allowMouseInput = true;
+            }
         }
         repaint();
     }
@@ -441,6 +445,11 @@ public class Board extends JPanel {
         turn = (turn + 1) % players.length;
         turnPanel.setBackground(colors[turn]);
         hopMove = false;
+        if (players[turn].isHuman()) {
+            allowMouseInput = true;
+        } else {
+            // AI.makeMove(board)
+        }
     }
 
     /*
@@ -449,6 +458,7 @@ public class Board extends JPanel {
     private void createTurnPanel() {
         turnPanel = new JPanel();
         JLabel label = new JLabel("Turn: ");
+        label.setForeground(Color.DARK_GRAY);
         turnPanel.add(label);
         this.setLayout(null);
         turnPanel.setFocusable(false);
