@@ -11,9 +11,8 @@
 
 package Test;
 
-import FrameWork.Board;
-import FrameWork.HumanPlayer;
-import FrameWork.Player;
+import FrameWork.*;
+
 
 /**
  *
@@ -25,7 +24,7 @@ public class BoardFrame extends javax.swing.JFrame {
     public BoardFrame() {
         initComponents();
         int boardsize = 700;
-        Board board = new Board(boardsize, new Player[]{ new HumanPlayer(), new HumanPlayer(), new HumanPlayer(), new HumanPlayer()});
+        Board board = new Board(boardsize, new Player[]{ new HumanPlayer(), new RandomAIPlayer(), new RandomAIPlayer(), new RandomAIPlayer()});
         add(board);
         setSize(1000,1000);
         Player[] p = new Player[3];

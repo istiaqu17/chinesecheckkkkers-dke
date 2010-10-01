@@ -14,7 +14,7 @@ public interface Player
 	//The human player will make moves through mouse clicks.
 	//The AI bot will calculate possible moves.
 	//Should this return anything?
-	void makeMove();
+	void makeMove(Board b);
 	
 	//A player will have an assigned color.
 	void setColor(Color aColor);

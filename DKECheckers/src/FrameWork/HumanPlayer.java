@@ -24,7 +24,7 @@ public class HumanPlayer implements Player {
         goalPositions = goal;
     }
 
-    public void makeMove() {
+    public void makeMove(Board b) {
     }
 
     public Color getColor() {

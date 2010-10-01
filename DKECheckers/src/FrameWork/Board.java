@@ -448,7 +448,7 @@ public class Board extends JPanel {
         if (players[turn].isHuman()) {
             allowMouseInput = true;
         } else {
-            // AI.makeMove(board)
+             players[turn].makeMove(this);
         }
     }
 
@@ -465,5 +465,13 @@ public class Board extends JPanel {
         turnPanel.setBackground(players[turn].getColor());
         add(turnPanel);
         turnPanel.setBounds(400, 10, 80, 40);
+    }
+
+    public ArrayList<Position> getValidMoves(){
+        return validMovePositions;
+    }
+
+    public Position[][] getBoardArray(){
+        return positions;
     }
 }
