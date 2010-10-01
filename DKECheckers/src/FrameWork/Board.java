@@ -120,7 +120,7 @@ public class Board extends JPanel {
                             selectedPosition = positions[mouseClickLocation[1]][mouseClickLocation[0]];
                             determineValidMoves(positions[mouseClickLocation[1]][mouseClickLocation[0]]);
                         } // if the user already selected a piece, check ik the position he clicked now is empty to check if the user is able to move the piece to this position
-                        else if (positions[mouseClickLocation[1]][mouseClickLocation[0]].getPiece() == null) {
+                        else if (positions[mouseClickLocation[1]][mouseClickLocation[0]].getPiece() == null && selectedPosition != null) {
                             int[] selectedPos = getPosition(selectedPosition.getX() + (getWidth() / (2 * positions.length)), selectedPosition.getY() + (getWidth() / (2 * positions.length)));
                             if (Math.abs(mouseClickLocation[0] - selectedPos[0]) == 2 || Math.abs(mouseClickLocation[1] - selectedPos[1]) == 2) {
                                 hopMove = true;
@@ -443,7 +443,7 @@ public class Board extends JPanel {
      */
     private void nextTurn() {
         turn = (turn + 1) % players.length;
-        turnPanel.setBackground(colors[turn]);
+        turnPanel.setBackground(players[turn].getColor());
         hopMove = false;
         if (players[turn].isHuman()) {
             allowMouseInput = true;
@@ -462,7 +462,7 @@ public class Board extends JPanel {
         turnPanel.add(label);
         this.setLayout(null);
         turnPanel.setFocusable(false);
-        turnPanel.setBackground(colors[turn]);
+        turnPanel.setBackground(players[turn].getColor());
         add(turnPanel);
         turnPanel.setBounds(400, 10, 80, 40);
     }
