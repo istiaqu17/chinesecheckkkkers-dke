@@ -3,8 +3,8 @@ package FrameWork;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import javax.swing.JPanel;
-import javax.swing.Timer;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
 
 /**
  *
@@ -29,16 +29,19 @@ public class Board extends JPanel {
     private Player[] players;
     private int turn;
     private boolean hopMove;
+    private JButton nextTurnButton;
+    private JPanel turnPanel;
+
     /*
      * Constructor
      */
-
     public Board(int size, Player[] players) {
         this.setSize(size, size);
         this.players = players;
         createBoard();
         turn = 0;
         allowMouseInput = true;
+        createTurnPanel();
     }
 
     /*
@@ -114,12 +117,13 @@ public class Board extends JPanel {
                                 && positions[mouseClickLocation[1]][mouseClickLocation[0]].getPiece().getColor() == players[turn].getColor()) {
                             selectedPosition = positions[mouseClickLocation[1]][mouseClickLocation[0]];
                             determineValidMoves(positions[mouseClickLocation[1]][mouseClickLocation[0]]);
-                        }
-                        // if the user already selected a piece, check ik the position he clicked now is empty to check if the user is able to move the piece to this position
+                        } // if the user already selected a piece, check ik the position he clicked now is empty to check if the user is able to move the piece to this position
                         else if (positions[mouseClickLocation[1]][mouseClickLocation[0]].getPiece() == null) {
-                            int[] selectedPos = getPosition(selectedPosition.getX(), selectedPosition.getY());
-                            if (Math.abs(mouseClickLocation[1] - selectedPos[0]) == 2 || Math.abs(mouseClickLocation[0] - selectedPos[1]) == 2){
+                            int[] selectedPos = getPosition(selectedPosition.getX() + (getWidth() / (2 * positions.length)), selectedPosition.getY() + (getWidth() / (2 * positions.length)));
+                            if (Math.abs(mouseClickLocation[0] - selectedPos[0]) == 2 || Math.abs(mouseClickLocation[1] - selectedPos[1]) == 2) {
                                 hopMove = true;
+                            } else {
+                                hopMove = false;
                             }
                             Move move = new Move(new Position[]{selectedPosition, positions[mouseClickLocation[1]][mouseClickLocation[0]]});
                             if (isValidMove(move)) {
@@ -130,32 +134,6 @@ public class Board extends JPanel {
                     }
                     repaint();
                 }
-
-//                if (allowMouseInput) {
-//                    mouseClickLocation = getPosition(e.getX(), e.getY());
-//                    if (mouseClickLocation[0] != -1 && positions[mouseClickLocation[1]][mouseClickLocation[0]] != null) {
-//                        if (positions[mouseClickLocation[1]][mouseClickLocation[0]].getPiece() != null
-//                                && positions[mouseClickLocation[1]][mouseClickLocation[0]].getPiece().getColor() == players[turn].getColor()
-//                                && !hopMove) {
-//                            System.out.println("2");
-//                            selectedPiece = positions[mouseClickLocation[1]][mouseClickLocation[0]].getPiece();
-//                            movingPiecePositions = new Position[]{positions[mouseClickLocation[1]][mouseClickLocation[0]], null};
-//                            determineValidMoves(positions[mouseClickLocation[1]][mouseClickLocation[0]]);
-//                            System.out.println(validMoves.size() + " validmovesize");
-//                        } else if (selectedPiece != null) {
-//                            selectedPosition = positions[mouseClickLocation[1]][mouseClickLocation[0]];
-//                            movingPiecePositions[1] = positions[mouseClickLocation[1]][mouseClickLocation[0]];
-//                            if (isValidMove(movingPiecePositions[1])) {
-//                                movePiece(movingPiecePositions);
-//                            }
-//                            resetMouseInput();
-//                        } else {
-//                            selectedPiece = null;
-//                            selectedPosition = null;
-//                        }
-//                    }
-//                    repaint();
-//                }
             }
 
             public void mousePressed(MouseEvent e) {
@@ -252,7 +230,7 @@ public class Board extends JPanel {
     // Checks if a move is valid
     public boolean isValidMove(Move move) {
         Position[] movePositions = move.getPositions();
-        for (int i = 0; i < movePositions.length; i++) {
+        for (int i = 0; i < validMovePositions.size(); i++) {
             if (move.getPositions()[move.getPositions().length - 1] == validMovePositions.get(i)) {
                 return true;
             }
@@ -367,19 +345,34 @@ public class Board extends JPanel {
                 movePiece(movingPiecePositions);
             }
 
-            // Section which handles the hopmoves after a player has made one hopmove WIP
-//            if (hopMove) {
-//                System.out.println("Turn stays the same");
-//                selectedPosition = movingPiecePositions[1];
-//                determineHopMoves(movingPiecePositions[1]);
-//                if (validMovePositions.size() == 0) {
-//                    hopMove = false;
-//                    nextTurn();
-//                }
-//            } else {
-//                nextTurn();
-//            }
-            nextTurn();
+            // If the player made a hopmove, he is allowed to do another hopmove
+            if (hopMove) {
+                // Shows a button to end the move if a user is done hopping
+                if (nextTurnButton == null) {
+                    nextTurnButton = new JButton("End turn");
+                    nextTurnButton.setFocusable(false);
+                    class nextTurnListener implements ActionListener {
+
+                        public void actionPerformed(ActionEvent e) {
+                            nextTurn();
+                            remove(nextTurnButton);
+                            nextTurnButton = null;
+                            resetMouseInput();
+                            repaint();
+                        }
+                    }
+                    nextTurnButton.addActionListener(new nextTurnListener());
+                    add(nextTurnButton);
+                    nextTurnButton.setBounds(10, 10, 125, 40);
+                }
+                selectedPosition = movingPiecePositions[1];
+                determineHopMoves(selectedPosition);
+                if (validMovePositions.size() == 0) {
+                    nextTurn();
+                }
+            } else {
+                nextTurn();
+            }
             allowMouseInput = true;
         }
         repaint();
@@ -394,6 +387,9 @@ public class Board extends JPanel {
         repaint();
     }
 
+    /*
+     * Resets the selected pieces and positions
+     */
     private void resetMouseInput() {
         validMovePositions.clear();
         mouseHoverLocation = new int[]{-1, -1};
@@ -401,21 +397,63 @@ public class Board extends JPanel {
         selectedPosition = null;
     }
 
+    /*
+     * Fills the board with the pieces
+     */
     private void setupBoard() {
         switch (players.length) {
             case 0:
             case 1:
+            case 5:
                 System.out.println("Wrong player number");
                 break;
             case 2:
                 setPlayerBase(0, players[0]);
                 setPlayerBase(3, players[1]);
                 break;
+            case 3:
+                setPlayerBase(0, players[0]);
+                setPlayerBase(2, players[1]);
+                setPlayerBase(4, players[2]);
+                break;
+            case 4:
+                setPlayerBase(1, players[0]);
+                setPlayerBase(2, players[1]);
+                setPlayerBase(4, players[2]);
+                setPlayerBase(5, players[3]);
+                break;
+            case 6:
+                setPlayerBase(0, players[0]);
+                setPlayerBase(1, players[1]);
+                setPlayerBase(2, players[2]);
+                setPlayerBase(3, players[3]);
+                setPlayerBase(4, players[4]);
+                setPlayerBase(5, players[5]);
+                break;
 
         }
     }
 
+    /*
+     * Sets the turn to the next player
+     */
     private void nextTurn() {
         turn = (turn + 1) % players.length;
+        turnPanel.setBackground(colors[turn]);
+        hopMove = false;
+    }
+
+    /*
+     * Shows who's turn it is
+     */
+    private void createTurnPanel() {
+        turnPanel = new JPanel();
+        JLabel label = new JLabel("Turn: ");
+        turnPanel.add(label);
+        this.setLayout(null);
+        turnPanel.setFocusable(false);
+        turnPanel.setBackground(colors[turn]);
+        add(turnPanel);
+        turnPanel.setBounds(400, 10, 80, 40);
     }
 }
