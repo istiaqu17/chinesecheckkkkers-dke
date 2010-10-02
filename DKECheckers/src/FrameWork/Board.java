@@ -471,7 +471,33 @@ public class Board extends JPanel {
         return validMovePositions;
     }
 
-    public Position[][] getBoardArray(){
-        return positions;
+     //this makes an array with all positions currently occupied by the pieces of this player
+    public Position[] findPieces(Color color){
+        int i = 0;
+        Position[] currentPositions = new Position[10];
+        for(Position[] pos: positions){
+            for(Position p: pos){
+                if(p != null && p.getPiece() != null && p.getPiece().getColor() == color){
+                    currentPositions[i] = p;
+                    i++;
+                }
+            }
+        }
+        return currentPositions;
+    }
+
+     //this makes an array with all positions currently occupied by the pieces of this player opponents
+    public Position[] findOpponentsPieces(Color color){
+        int i = 0;
+        Position[] opponentsPositions = new Position[players.length -1];
+        for(Position[] pos: positions){
+            for(Position p: pos){
+                if(p != null && p.getPiece() != null && p.getPiece().getColor() != color){
+                    opponentsPositions[i] = p;
+                    i++;
+                }
+            }
+        }
+        return opponentsPositions;
     }
 }

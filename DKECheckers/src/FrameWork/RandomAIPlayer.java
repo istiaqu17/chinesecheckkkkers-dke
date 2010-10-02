@@ -33,7 +33,7 @@ public class RandomAIPlayer implements Player{
     }
 
     public void makeMove(Board board){
-        Position[] currentPositions = getCurrentPositions(board);
+        Position[] currentPositions = board.findPieces(color);
         boolean moved = false;
         Random r = new Random();
         int random = -1;
@@ -63,21 +63,7 @@ public class RandomAIPlayer implements Player{
         }
     }
 
-    //this makes an array with all positions currently occupied by the pieces of this player
-    private Position[] getCurrentPositions(Board board){
-        int i = 0;
-        Position[] currentPositions = new Position[10];
-        Position[][] array = board.getBoardArray();
-        for(Position[] pos: array){
-            for(Position p: pos){
-                if(p != null && p.getPiece() != null && p.getPiece().getColor() == color){
-                    currentPositions[i] = p;
-                    i++;
-                }
-            }
-        }
-        return currentPositions;
-    }
+   
     
     public void setColor(Color aColor){
         color = aColor;
