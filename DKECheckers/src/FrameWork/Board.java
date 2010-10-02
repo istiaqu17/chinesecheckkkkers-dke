@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 
 /**
  *
@@ -25,9 +24,10 @@ public class Board extends JPanel {
     private Timer timer;
     private int moveRepeats = 0;
     private boolean allowMouseInput;
+    private boolean allowPieceSelection = true;
     private ArrayList<Position> validMovePositions = new ArrayList<Position>();
     private Player[] players;
-    private int turn;
+    private int turn = -1;
     private boolean hopMove;
     private JButton nextTurnButton;
     private JPanel turnPanel;
@@ -39,11 +39,8 @@ public class Board extends JPanel {
         this.setSize(size, size);
         this.players = players;
         createBoard();
-        turn = 0;
-        if (players[turn].isHuman()) {
-            allowMouseInput = true;
-        }
         createTurnPanel();
+        nextTurn();
     }
 
     /*
@@ -116,7 +113,8 @@ public class Board extends JPanel {
                     // checks if the position is on the board, if there is a piece and if the piece is that player's color
                     if (mouseClickLocation[0] != -1 && positions[mouseClickLocation[1]][mouseClickLocation[0]] != null) {
                         if (positions[mouseClickLocation[1]][mouseClickLocation[0]].getPiece() != null
-                                && positions[mouseClickLocation[1]][mouseClickLocation[0]].getPiece().getColor() == players[turn].getColor()) {
+                                && positions[mouseClickLocation[1]][mouseClickLocation[0]].getPiece().getColor() == players[turn].getColor()
+                                && allowPieceSelection) {
                             selectedPosition = positions[mouseClickLocation[1]][mouseClickLocation[0]];
                             determineValidMoves(positions[mouseClickLocation[1]][mouseClickLocation[0]]);
                         } // if the user already selected a piece, check ik the position he clicked now is empty to check if the user is able to move the piece to this position
@@ -231,7 +229,6 @@ public class Board extends JPanel {
 
     // Checks if a move is valid
     public boolean isValidMove(Move move) {
-        Position[] movePositions = move.getPositions();
         for (int i = 0; i < validMovePositions.size(); i++) {
             if (move.getPositions()[move.getPositions().length - 1] == validMovePositions.get(i)) {
                 return true;
@@ -349,6 +346,7 @@ public class Board extends JPanel {
 
             // If the player made a hopmove, he is allowed to do another hopmove
             if (hopMove) {
+                allowPieceSelection = false;
                 // Shows a button to end the move if a user is done hopping
                 if (nextTurnButton == null) {
                     nextTurnButton = new JButton("End turn");
@@ -442,13 +440,16 @@ public class Board extends JPanel {
      * Sets the turn to the next player
      */
     private void nextTurn() {
-        turn = (turn + 1) % players.length;
-        turnPanel.setBackground(players[turn].getColor());
-        hopMove = false;
-        if (players[turn].isHuman()) {
-            allowMouseInput = true;
-        } else {
-             players[turn].makeMove(this);
+        if (!checkForWinner()) {
+            turn = (turn + 1) % players.length;
+            turnPanel.setBackground(players[turn].getColor());
+            hopMove = false;
+            allowPieceSelection = true;
+            if (players[turn].isHuman()) {
+                allowMouseInput = true;
+            } else {
+                players[turn].makeMove(this);
+            }
         }
     }
 
@@ -462,22 +463,21 @@ public class Board extends JPanel {
         turnPanel.add(label);
         this.setLayout(null);
         turnPanel.setFocusable(false);
-        turnPanel.setBackground(players[turn].getColor());
         add(turnPanel);
         turnPanel.setBounds(400, 10, 80, 40);
     }
 
-    public ArrayList<Position> getValidMoves(){
+    public ArrayList<Position> getValidMoves() {
         return validMovePositions;
     }
 
-     //this makes an array with all positions currently occupied by the pieces of this player
-    public Position[] findPieces(Color color){
+    //this makes an array with all positions currently occupied by the pieces of this player
+    public Position[] findPieces(Color color) {
         int i = 0;
         Position[] currentPositions = new Position[10];
-        for(Position[] pos: positions){
-            for(Position p: pos){
-                if(p != null && p.getPiece() != null && p.getPiece().getColor() == color){
+        for (Position[] pos : positions) {
+            for (Position p : pos) {
+                if (p != null && p.getPiece() != null && p.getPiece().getColor() == color) {
                     currentPositions[i] = p;
                     i++;
                 }
@@ -486,18 +486,34 @@ public class Board extends JPanel {
         return currentPositions;
     }
 
-     //this makes an array with all positions currently occupied by the pieces of this player opponents
-    public Position[] findOpponentsPieces(Color color){
+    //this makes an array with all positions currently occupied by the pieces of this player opponents
+    public Position[] findOpponentsPieces(Color color) {
         int i = 0;
-        Position[] opponentsPositions = new Position[players.length -1];
-        for(Position[] pos: positions){
-            for(Position p: pos){
-                if(p != null && p.getPiece() != null && p.getPiece().getColor() != color){
+        Position[] opponentsPositions = new Position[players.length - 1];
+        for (Position[] pos : positions) {
+            for (Position p : pos) {
+                if (p != null && p.getPiece() != null && p.getPiece().getColor() != color) {
                     opponentsPositions[i] = p;
                     i++;
                 }
             }
         }
         return opponentsPositions;
+    }
+
+    private boolean checkForWinner() {
+        if (turn < 0){
+            return false;
+        }
+        boolean winner = true;
+        int goalPieces = 10;
+        for (Position goalPosition: players[turn].getGoal()){
+            if (goalPosition.getPiece() == null || goalPosition.getPiece().getColor() != players[turn].getColor()){
+                winner = false;
+                goalPieces--;
+            }
+        }
+        System.out.println("Player: " + turn + " Winner: " + winner + " Pieces in goal: " + goalPieces);
+        return winner;
     }
 }

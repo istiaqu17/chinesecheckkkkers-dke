@@ -27,7 +27,6 @@ public class RandomAIPlayer implements Player{
 
     }
 
-
     public boolean isHuman(){
         return false;
     }
