@@ -25,7 +25,6 @@ public class BoardFrame extends javax.swing.JFrame {
         Board board = new Board(boardsize, p); //new Player[]{new HumanPlayer(),new HumanPlayer()});
         add(board);
         setSize(1000,1000);
-        //Player[] p = new Player[3];
     }
 
     /** This method is called from within the constructor to

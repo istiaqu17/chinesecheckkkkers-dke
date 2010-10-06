@@ -184,7 +184,7 @@ public class Start extends JFrame{
                 System.out.println(n);
                 if (type.equals("Human Player")) {
                     //First: prevent creation of unnecessary objects:
-                    if (players[n] == null) { // || players[n] instanceof RandomAIPlayer){
+                    if (players[n] == null || players[n] instanceof RandomAIPlayer){
                         HumanPlayer player = new HumanPlayer();
                         players[n] = player;
                         System.out.println("Human player was created");
@@ -193,10 +193,9 @@ public class Start extends JFrame{
                 if (type.equals("Random AI")) {
                     //if will prevent the creation of unnecessary objects
                     if (players[n] == null || players[n] instanceof HumanPlayer){
-                        //my randomAIplayer class is commented away at the moment
-                        HumanPlayer player = new HumanPlayer();
+                        RandomAIPlayer player = new RandomAIPlayer();
                         players[n] = player;
-                        System.out.println("random aiPlayer is supposed to be created, human instead");
+                        System.out.println("random aiPlayer");
                     }
                 }
             }
