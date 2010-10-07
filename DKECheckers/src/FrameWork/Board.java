@@ -1,5 +1,6 @@
 package FrameWork;
 
+import Players.Player;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -12,23 +13,23 @@ import javax.swing.*;
 public class Board extends JPanel {
 
     private Position[][] positions = new Position[17][17];
+    private Position[][] playerBases;
+    private Position[] movingPiecePositions = new Position[]{null, null};
+    private Position selectedPosition;
+    private int turn = -1;
+    private int moveRepeats = 0;
     private int[] mouseClickLocation = new int[]{-1, -1};
     private int[] mouseHoverLocation = new int[]{-1, -1};
     private int[][] rowLengths = new int[][]{{4, 1}, {4, 2}, {4, 3}, {4, 4}, {0, 13}, {1, 12}, {2, 11}, {3, 10}, {4, 9}, {4, 10}, {4, 11}, {4, 12}, {4, 13}, {9, 4}, {10, 3}, {11, 2}, {12, 1}};
-    private Position[][] playerBases;
-    private Color[] colors = new Color[]{Color.YELLOW, Color.BLUE, Color.RED, Color.GREEN, Color.ORANGE, Color.MAGENTA};
-    private Position selectedPosition;
-    private Piece movingPiece;
-    private Position[] movingPiecePositions = new Position[]{null, null};
     private double[] movingPieceCoordinates;
-    private Timer timer;
-    private int moveRepeats = 0;
     private boolean allowMouseInput;
     private boolean allowPieceSelection = true;
+    private boolean hopMove;
+    private Color[] colors = new Color[]{Color.YELLOW, Color.BLUE, Color.RED, Color.GREEN, Color.ORANGE, Color.MAGENTA};
+    private Piece movingPiece;
+    private Timer timer;
     private ArrayList<Position> validMovePositions = new ArrayList<Position>();
     private Player[] players;
-    private int turn = -1;
-    private boolean hopMove;
     private JButton nextTurnButton;
     private JPanel turnPanel;
 
@@ -197,6 +198,7 @@ public class Board extends JPanel {
         int i = positionCoordinates[1];
         int j = positionCoordinates[0];
         int[][] positionsToCheck = new int[][]{{-1, -1}, {-1, 0}, {0, 1}, {1, 1}, {1, 0}, {0, -1}};
+        validMovePositions.clear();
         determineHopMoves(position);
         for (int k = 0; k < positionsToCheck.length; k++) {
             if (i + positionsToCheck[k][0] >= 0 && i + positionsToCheck[k][0] <= 16 && j + positionsToCheck[k][1] >= 0 && j + positionsToCheck[k][1] <= 16) {
@@ -210,7 +212,6 @@ public class Board extends JPanel {
 
     // Determines all the valid hopmoves for a position
     public void determineHopMoves(Position position) {
-        validMovePositions.clear();
         int[] positionCoordinates = getPosition(position.getX() + (this.getWidth() / (2 * positions.length)), position.getY() + (this.getWidth() / (2 * positions.length)));
         int i = positionCoordinates[1];
         int j = positionCoordinates[0];
@@ -366,6 +367,7 @@ public class Board extends JPanel {
                     nextTurnButton.setBounds(10, 10, 125, 40);
                 }
                 selectedPosition = movingPiecePositions[1];
+                validMovePositions.clear();
                 determineHopMoves(selectedPosition);
                 if (validMovePositions.size() == 0) {
                     nextTurn();
@@ -513,7 +515,7 @@ public class Board extends JPanel {
                 goalPieces--;
             }
         }
-        System.out.println("Player: " + turn + " Winner: " + winner + " Pieces in goal: " + goalPieces);
+//        System.out.println("Player: " + turn + " Winner: " + winner + " Pieces in goal: " + goalPieces);
         return winner;
     }
 }

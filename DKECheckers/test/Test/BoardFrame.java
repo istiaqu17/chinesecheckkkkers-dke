@@ -9,9 +9,11 @@
  * Created on 14-sep-2010, 11:32:48
  */
 
-package FrameWork;
+package Test;
 
+import Players.RandomAIPlayer;
 import Players.Player;
+import FrameWork.*;
 
 
 /**
@@ -20,16 +22,11 @@ import Players.Player;
  */
 public class BoardFrame extends javax.swing.JFrame {
 
-    /*
-     * THIS CLASS SHOULD BE REMOVED AND REPLACED BY Satu
-     */
-
-
     /** Creates new form BoardFrame */
-    public BoardFrame(Player[] p) {
+    public BoardFrame() {
         initComponents();
         int boardsize = 700;
-        Board board = new Board(boardsize, p); //new Player[]{new HumanPlayer(),new HumanPlayer()});
+        Board board = new Board(boardsize, new Player[]{new RandomAIPlayer(),new RandomAIPlayer(),new RandomAIPlayer(),new RandomAIPlayer(),new RandomAIPlayer(),new RandomAIPlayer()});
         add(board);
         setSize(1000,1000);
     }
@@ -62,13 +59,13 @@ public class BoardFrame extends javax.swing.JFrame {
     /**
     * @param args the command line arguments
     */
-//    public static void main(String args[]) {
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new BoardFrame().setVisible(true);
-//            }
-//        });
-//    }
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new BoardFrame().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

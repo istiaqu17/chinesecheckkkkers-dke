@@ -1,5 +1,7 @@
-package FrameWork;
+package Players;
 
+import FrameWork.Board;
+import FrameWork.Position;
 import java.awt.Color;
 
 /**

@@ -3,8 +3,10 @@
  * and open the template in the editor.
  */
 
-package FrameWork;
+package Players;
 
+import FrameWork.Board;
+import FrameWork.Position;
 import java.awt.Color;
 import java.util.Random;
 

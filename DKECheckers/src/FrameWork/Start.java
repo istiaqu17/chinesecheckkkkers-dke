@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package FrameWork;
 
 /**
@@ -10,6 +9,12 @@ package FrameWork;
  * @author Satu
  */
 
+/*
+ * THIS CLASS SHOULD BE REMOVED AND REPLACED BY Satu
+ */
+import Players.Player;
+import Players.RandomAIPlayer;
+import Players.HumanPlayer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -18,7 +23,7 @@ import java.awt.GridLayout;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 
-public class Start extends JFrame{
+public class Start extends JFrame {
 
     private static final int WIDTH = 400;
     private static final int HEIGHT = 400;
@@ -52,7 +57,7 @@ public class Start extends JFrame{
 
         number = createNumber();
         basePanel.add(number, BorderLayout.CENTER);
-        
+
         okButton = createOkButton();
         basePanel.add(okButton, BorderLayout.PAGE_END);
 
@@ -91,6 +96,7 @@ public class Start extends JFrame{
         group.add(six);
 
         class RadioListener implements ActionListener {
+
             public void actionPerformed(ActionEvent e) {
                 if (e.getActionCommand().equals("two")) {
                     nPlayers = 2;
@@ -141,10 +147,11 @@ public class Start extends JFrame{
     private JButton createOkButton() {
         JButton ok = new JButton("OK");
         class StartListener implements ActionListener {
+
             public void actionPerformed(ActionEvent e) {
                 for (int i = 1; i <= nPlayers; i++) {
                     playerPanels.add(createPlayerLine("Player " + i + ":"));
-                    
+
                 }
 
                 players = new Player[nPlayers];
@@ -156,7 +163,7 @@ public class Start extends JFrame{
 
                 createStartButton();
                 createPanel();
-                
+
                 number.setVisible(false);
                 okButton.setVisible(false);
                 repaint();
@@ -172,19 +179,20 @@ public class Start extends JFrame{
         final String s = text;
         JPanel p = new JPanel();
         JLabel t = new JLabel(text);
-        String[] choices = { "Human Player", "Random AI"};
+        String[] choices = {"Human Player", "Random AI"};
         JComboBox player = new JComboBox(choices);
         //player.setSelectedIndex(0);
         class PlayerListener implements ActionListener {
+
             public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox)e.getSource();
-                String type = (String)cb.getSelectedItem();
+                JComboBox cb = (JComboBox) e.getSource();
+                String type = (String) cb.getSelectedItem();
                 int n = Integer.parseInt(s.substring(7, 8)) - 1;
                 System.out.println(s);
                 System.out.println(n);
                 if (type.equals("Human Player")) {
                     //First: prevent creation of unnecessary objects:
-                    if (players[n] == null || players[n] instanceof RandomAIPlayer){
+                    if (players[n] == null || players[n] instanceof RandomAIPlayer) {
                         HumanPlayer player = new HumanPlayer();
                         players[n] = player;
                         System.out.println("Human player was created");
@@ -192,7 +200,7 @@ public class Start extends JFrame{
                 }
                 if (type.equals("Random AI")) {
                     //if will prevent the creation of unnecessary objects
-                    if (players[n] == null || players[n] instanceof HumanPlayer){
+                    if (players[n] == null || players[n] instanceof HumanPlayer) {
                         RandomAIPlayer player = new RandomAIPlayer();
                         players[n] = player;
                         System.out.println("random aiPlayer");
@@ -210,11 +218,13 @@ public class Start extends JFrame{
     private void createStartButton() {
         startButton = new JButton("Start");
         class StartListener implements ActionListener {
+
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
                 java.awt.EventQueue.invokeLater(new Runnable() {
+
                     public void run() {
-                         //final check to make sure everything is ok:
+                        //final check to make sure everything is ok:
                         for (int i = 0; i < nPlayers; i++) {
                             if (players[i] == null) {
                                 players[i] = new HumanPlayer();
@@ -245,5 +255,4 @@ public class Start extends JFrame{
         basePanel.add(panel, BorderLayout.CENTER);
         basePanel.add(startButton, BorderLayout.PAGE_END);
     }
-
 }
