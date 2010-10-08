@@ -7,7 +7,7 @@ package FrameWork;
 
 /**
  *
- * @author Suzanne
+ * @author Suzanne, Rik
  */
 public class Move {
     // The class move represents a move, so it does not handle the moment a player makes a move sorry :S

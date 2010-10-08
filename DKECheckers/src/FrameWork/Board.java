@@ -473,6 +473,10 @@ public class Board extends JPanel {
         return validMovePositions;
     }
 
+    public Position[][] getBoardPositions(){
+        return this.positions;
+    }
+
     //this makes an array with all positions currently occupied by the pieces of this player
     public Position[] findPieces(Color color) {
         int i = 0;
