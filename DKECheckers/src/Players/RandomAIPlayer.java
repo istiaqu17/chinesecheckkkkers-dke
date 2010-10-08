@@ -6,6 +6,7 @@
 package Players;
 
 import FrameWork.Board;
+import FrameWork.Move;
 import FrameWork.Position;
 import java.awt.Color;
 import java.util.Random;
@@ -56,7 +57,7 @@ public class RandomAIPlayer implements Player{
                 beginAndEnd[0] = p;
                 // end position
                 beginAndEnd[1] = board.getValidMoves().get(random2);
-                board.movePiece(beginAndEnd);
+                board.movePiece(new Move(beginAndEnd));
                 moved = true;
                 //update the currentpositions list
                 currentPositions[random] = beginAndEnd[1];

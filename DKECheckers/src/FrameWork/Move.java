@@ -16,7 +16,6 @@ public class Move {
 
     public Move(Position[] positions){
         this.positions = positions;
-        this.hopMove = hopMove;
     }
 
     public Position[] getPositions(){
