@@ -1,6 +1,13 @@
 package Players;
 
 import FrameWork.Board;
+import FrameWork.Board;
+import FrameWork.Board;
+import FrameWork.Move;
+import FrameWork.Move;
+import FrameWork.Move;
+import FrameWork.Position;
+import FrameWork.Position;
 import FrameWork.Position;
 import java.awt.Color;
 
@@ -16,7 +23,7 @@ public interface Player
 	//The human player will make moves through mouse clicks.
 	//The AI bot will calculate possible moves.
 	//Should this return anything?
-	void makeMove(Board b);
+	Move makeMove(Board b);
 	
 	//A player will have an assigned color.
 	void setColor(Color aColor);
@@ -31,5 +38,6 @@ public interface Player
         Position[] getGoal();
 
         boolean isHuman();
+
 }
 

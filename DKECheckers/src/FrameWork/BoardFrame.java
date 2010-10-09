@@ -20,11 +20,6 @@ import Players.Player;
  */
 public class BoardFrame extends javax.swing.JFrame {
 
-    /*
-     * THIS CLASS SHOULD BE REMOVED AND REPLACED BY Satu
-     */
-
-
     /** Creates new form BoardFrame */
     public BoardFrame(Player[] p) {
         initComponents();

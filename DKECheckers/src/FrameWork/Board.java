@@ -33,6 +33,7 @@ public class Board extends JPanel {
     private Player[] players;
     private JPanel turnPanel;
 
+
     /*
      * Constructor
      */
@@ -123,7 +124,6 @@ public class Board extends JPanel {
                                 for (int i = 1; i < move.getPositions().length; i++) {
                                     Position position = move.getPositions()[i];
                                     int[] positionCoordinates = getPosition(position.getX() + (getWidth() / (2 * positions.length)), position.getY() + (getWidth() / (2 * positions.length)));
-                                    System.out.println("Valid movePosition: " + positionCoordinates[1] + " " + positionCoordinates[0]);
                                     validMovePositions.add(move.getPositions()[i]);
                                 }
                             }
@@ -144,7 +144,7 @@ public class Board extends JPanel {
                                     }
                                 }
                             }
-                            if (isValidMove(move)) {
+                            if (move.getPositions() != null && isValidMove(move)) {
                                 movePiece(move);
                             }
                             resetMouseInput();
@@ -211,11 +211,17 @@ public class Board extends JPanel {
 
     // Determines all the valid Moves for a position, including hopmoves
     public ArrayList<Move> determineValidMoves(Position position) {
+        // validMoves will store ALL valid moves
         ArrayList<Move> validMoves = new ArrayList<Move>();
+        // validHopMoves will store the hopmoves which have been found in one check
+        ArrayList<Move> validHopMoves = new ArrayList<Move>();
+        // At the start no positions have been checked
         positionsChecked.clear();
+        // Calculate the index of the position which needs to be checked for valid moves
         int[] positionCoordinates = getPosition(position.getX() + (this.getWidth() / (2 * positions.length)), position.getY() + (this.getWidth() / (2 * positions.length)));
         int i = positionCoordinates[1];
         int j = positionCoordinates[0];
+        // Relative surroundings positions
         int[][] positionsToCheck = new int[][]{{-1, -1}, {-1, 0}, {0, 1}, {1, 1}, {1, 0}, {0, -1}};
         for (int k = 0; k < positionsToCheck.length; k++) {
             if (i + positionsToCheck[k][0] >= 0 && i + positionsToCheck[k][0] <= 16 && j + positionsToCheck[k][1] >= 0 && j + positionsToCheck[k][1] <= 16) {
@@ -229,17 +235,40 @@ public class Board extends JPanel {
                 if (positions[i + (2 * positionsToCheck[k][0])][j + (2 * positionsToCheck[k][1])] != null
                         && positions[i + positionsToCheck[k][0]][j + positionsToCheck[k][1]].getPiece() != null
                         && positions[i + (2 * positionsToCheck[k][0])][j + (2 * positionsToCheck[k][1])].getPiece() == null) {
+                    // Make a new move with starting position and endposition
                     Move newValidMove = new Move(new Position[]{position, positions[i + (2 * positionsToCheck[k][0])][j + (2 * positionsToCheck[k][1])]});
-                    validMoves.add(newValidMove);
-                    validMoves.addAll(determineValidHopMoves(newValidMove));
+                    // Add the move to the list
+                    validHopMoves.add(newValidMove);
                 }
             }
         }
-        System.out.println("Validmoves: " + validMoves.size());
+        // You only need to check for further hops if the player is able to make a hop from the starting position
+        boolean needToCheck = validHopMoves.size() > 0;
+        // Add all the hopmoves to the valid Move list
+        validMoves.addAll(validHopMoves);
+        // newValidHopMoves will store all the newly found hop moves from the positions which are already involved in a hop move
+        ArrayList<Move> newValidHopMoves = new ArrayList<Move>();
+        // As long as you find new valid positions to which a piece can hop, keep checking for new ones
+        while (needToCheck) {
+            // For all the hop moves found in the previous checked position, check for further hop moves
+            for (Move validHopMove : validHopMoves) {
+                // Add the newly found hopmoves to the temporary list
+                newValidHopMoves.addAll(determineValidHopMoves(validHopMove));
+            }
+            // Add all the newly found valid hop moves to the valid moves list
+            validMoves.addAll(newValidHopMoves);
+            // Now clear the hopmoves found in the previous check
+            validHopMoves.clear();
+            // Add all the newly found valid hop moves to the validHopMoves so that you can check these new position in the next run of the while-loop
+            validHopMoves.addAll(newValidHopMoves);
+            // Clear the newValidHopMoves list so that if you find new ones during the next run of the while-loop, the program doesn't check the same things twice
+            newValidHopMoves.clear();
+            // Only check again when you just found new positions to hop
+            needToCheck = validHopMoves.size() > 0;
+        }
         return validMoves;
     }
 
-    // Determines all the valid hopmoves for a position
     public ArrayList<Move> determineValidHopMoves(Move move) {
         ArrayList<Move> validHopMoves = new ArrayList<Move>();
         Position position = move.getPositions()[move.getPositions().length - 1];
@@ -250,36 +279,37 @@ public class Board extends JPanel {
         for (int k = 0; k < positionsToCheck.length; k++) {
             if ((i + (2 * positionsToCheck[k][0])) >= 0 && i + (2 * positionsToCheck[k][0]) <= 16 && j + (2 * positionsToCheck[k][1]) >= 0 && j + (2 * positionsToCheck[k][1]) <= 16) {
                 // Checks for hops
+                Position positionToCheck = positions[i + (2 * positionsToCheck[k][0])][j + (2 * positionsToCheck[k][1])];
                 if (positions[i + (2 * positionsToCheck[k][0])][j + (2 * positionsToCheck[k][1])] != null
-                        && positions[i + positionsToCheck[k][0]][j + positionsToCheck[k][1]].getPiece() != null
+                        && positions[i + positionsToCheck[k][0]][j +  positionsToCheck[k][1]].getPiece() != null
                         && positions[i + (2 * positionsToCheck[k][0])][j + (2 * positionsToCheck[k][1])].getPiece() == null) {
 
-                    Position[] movePositions = new Position[move.getPositions().length + 1];
-                    System.arraycopy(move.getPositions(), 0, movePositions, 0, move.getPositions().length);
-                    movePositions[movePositions.length - 1] = positions[i + (2 * positionsToCheck[k][0])][j + (2 * positionsToCheck[k][1])];
-                    Move newValidMove = new Move(movePositions);
-                    validMoves.add(newValidMove);
-                    boolean needToCheck = true;
-                    int[] validMoveCoordinates = getPosition(newValidMove.getPositions()[newValidMove.getPositions().length - 1].getX() + (this.getWidth() / (2 * positions.length)),
-                            newValidMove.getPositions()[newValidMove.getPositions().length - 1].getY() + (this.getWidth() / (2 * positions.length)));
+                    // Checks if the position found, has already been found or not, only add the position to the list if it hasn't been found already
+                    int[] validMoveCoordinates = getPosition(positionToCheck.getX() + (this.getWidth() / (2 * positions.length)), positionToCheck.getY() + (this.getWidth() / (2 * positions.length)));
+                    boolean positionAlreadyFound = false;
                     for (int m = 0; m < positionsChecked.size(); m++) {
                         int[] positionCheckedCoordinates = getPosition(positionsChecked.get(m).getX() + (this.getWidth() / (2 * positions.length)), positionsChecked.get(m).getY() + (this.getWidth() / (2 * positions.length)));
                         if (positionCheckedCoordinates[0] == validMoveCoordinates[0] && positionCheckedCoordinates[1] == validMoveCoordinates[1]) {
-                            needToCheck = false;
-                            System.out.println("Don't need to check: " + validMoveCoordinates[0] + " " + validMoveCoordinates[1] + " Checked: " + positionCheckedCoordinates[0] + " " + positionCheckedCoordinates[1]);
+                            positionAlreadyFound = true;
                             break;
                         }
                     }
-                    System.out.println("Checked position: " + i + " " + j);
-                    positionsChecked.add(position);
-                    if (needToCheck) {
-                        validMoves.addAll(determineValidHopMoves(newValidMove));
+                    // If the position has not been found already, then add is to the list of valid moves and add it to the list of positions which already have been checked
+                    if (!positionAlreadyFound) {
+                        // copies the positions the piece has to be moved to, to perform the multiple-hop move
+                        Position[] movePositions = new Position[move.getPositions().length + 1];
+                        for (int n = 0; n < move.getPositions().length; n++) {
+                            movePositions[n] = move.getPositions()[n];
+                        }
+                        // add the newly found position last
+                        movePositions[movePositions.length - 1] = positions[i + (2 * positionsToCheck[k][0])][j + (2 * positionsToCheck[k][1])];
+                        Move newValidMove = new Move(movePositions);
+                        validHopMoves.add(newValidMove);
+                        positionsChecked.add(positionToCheck);
                     }
-                    
                 }
             }
         }
-        System.out.println("Validmoves: " + validMoves.size());
         return validHopMoves;
     }
 
@@ -331,7 +361,6 @@ public class Board extends JPanel {
                         g2.drawOval((int) (positions[i][j].getX() + (0.05 * width)), (int) (positions[i][j].getY() + (0.05 * width)), (int) (0.9 * width), (int) (0.9 * width));
                     }
                     // Displays which position the user has clicked
-//                    if (i == mouseClickLocation[1] && j == mouseClickLocation[0]) {
                     if (positions[i][j] == selectedPosition) {
                         g2.setStroke(new BasicStroke(6f));
                         g2.setColor(Color.BLACK);
@@ -350,7 +379,7 @@ public class Board extends JPanel {
     /*
      * Moves a piece from it's starting position to it's end position while traversing all the positions in between.
      */
-    public void movePiece(Move move) {
+    private void movePiece(Move move) {
         validMovePositions.clear();
         Piece piece = move.getPositions()[0].getPiece();
         move.getPositions()[0].removePiece();
@@ -476,7 +505,7 @@ public class Board extends JPanel {
             if (players[turn].isHuman()) {
                 allowMouseInput = true;
             } else {
-                players[turn].makeMove(this);
+                movePiece(players[turn].makeMove(this));
             }
         }
     }

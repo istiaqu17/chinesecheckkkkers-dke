@@ -1,6 +1,13 @@
 package Players;
 
 import FrameWork.Board;
+import FrameWork.Board;
+import FrameWork.Board;
+import FrameWork.Move;
+import FrameWork.Move;
+import FrameWork.Move;
+import FrameWork.Position;
+import FrameWork.Position;
 import FrameWork.Position;
 import java.awt.Color;
 
@@ -26,7 +33,8 @@ public class HumanPlayer implements Player {
         goalPositions = goal;
     }
 
-    public void makeMove(Board b) {
+    public Move makeMove(Board b) {
+        return null;
     }
 
     public Color getColor() {
@@ -56,4 +64,6 @@ public class HumanPlayer implements Player {
     public boolean isHuman() {
         return true;
     }
+
+
 }

@@ -6,6 +6,13 @@
 package Players;
 
 import FrameWork.Board;
+import FrameWork.Board;
+import FrameWork.Board;
+import FrameWork.Move;
+import FrameWork.Move;
+import FrameWork.Move;
+import FrameWork.Position;
+import FrameWork.Position;
 import FrameWork.Position;
 import java.awt.Color;
 
@@ -22,10 +29,6 @@ public class Minimax implements Player{
         this.name = name;
         this.color = color;
         this.goalPositions = goal;
-    }
-    public void makeMove(Board board) {
-        Position[][] boardPositions = board.getBoardPositions();
-        
     }
 
     public void setColor(Color color) {
@@ -54,6 +57,10 @@ public class Minimax implements Player{
 
     public boolean isHuman() {
         return false;
+    }
+
+    public Move makeMove(Board b) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
