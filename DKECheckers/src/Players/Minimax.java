@@ -6,13 +6,7 @@
 package Players;
 
 import FrameWork.Board;
-import FrameWork.Board;
-import FrameWork.Board;
 import FrameWork.Move;
-import FrameWork.Move;
-import FrameWork.Move;
-import FrameWork.Position;
-import FrameWork.Position;
 import FrameWork.Position;
 import java.awt.Color;
 
@@ -61,6 +55,9 @@ public class Minimax implements Player{
 
     public Move makeMove(Board b) {
         throw new UnsupportedOperationException("Not supported yet.");
+//        int treeDepth = 1;
+//        Tree gameTree = new Tree(b, treeDepth, color);
+
     }
 
 }

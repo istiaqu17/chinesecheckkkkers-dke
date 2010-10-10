@@ -529,10 +529,6 @@ public class Board extends JPanel {
         turnPanel.setBounds(400, 10, 80, 40);
     }
 
-    public ArrayList<Position> getValidMoves() {
-        return validMovePositions;
-    }
-
     public Position[][] getBoardPositions() {
         return this.positions;
     }
@@ -580,5 +576,19 @@ public class Board extends JPanel {
             }
         }
         return winner;
+    }
+    
+    public Player getWinner() {
+        for (Player p: players){
+            boolean winner = true;
+            for (Position goalPosition : p.getGoal()) {
+                if (goalPosition.getPiece() == null || goalPosition.getPiece().getColor() != p.getColor()) {
+                    winner = false;
+                }
+             }
+            if(winner)
+                return p;
+        }
+        return null;
     }
 }
