@@ -281,7 +281,7 @@ public class Board extends JPanel {
                 // Checks for hops
                 Position positionToCheck = positions[i + (2 * positionsToCheck[k][0])][j + (2 * positionsToCheck[k][1])];
                 if (positions[i + (2 * positionsToCheck[k][0])][j + (2 * positionsToCheck[k][1])] != null
-                        && positions[i + positionsToCheck[k][0]][j +  positionsToCheck[k][1]].getPiece() != null
+                        && positions[i + positionsToCheck[k][0]][j + positionsToCheck[k][1]].getPiece() != null
                         && positions[i + (2 * positionsToCheck[k][0])][j + (2 * positionsToCheck[k][1])].getPiece() == null) {
 
                     // Checks if the position found, has already been found or not, only add the position to the list if it hasn't been found already
@@ -507,6 +507,11 @@ public class Board extends JPanel {
             } else {
                 movePiece(players[turn].makeMove(this));
             }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Player " + (turn + 1) + " is the winner",
+                    "We have a winner",
+                    JOptionPane.PLAIN_MESSAGE);
         }
     }
 
@@ -574,7 +579,6 @@ public class Board extends JPanel {
                 goalPieces--;
             }
         }
-//        System.out.println("Player: " + turn + " Winner: " + winner + " Pieces in goal: " + goalPieces);
         return winner;
     }
 }
