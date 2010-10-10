@@ -10,9 +10,6 @@ package FrameWork;
  * @author Satu
  */
 
-import Players.Player;
-import Players.HumanPlayer;
-import Players.RandomAIPlayer;
 import Players.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

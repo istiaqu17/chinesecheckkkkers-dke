@@ -5,13 +5,7 @@
 package Players;
 
 import FrameWork.Board;
-import FrameWork.Board;
-import FrameWork.Board;
 import FrameWork.Move;
-import FrameWork.Move;
-import FrameWork.Move;
-import FrameWork.Position;
-import FrameWork.Position;
 import FrameWork.Position;
 import java.awt.Color;
 import java.util.ArrayList;
