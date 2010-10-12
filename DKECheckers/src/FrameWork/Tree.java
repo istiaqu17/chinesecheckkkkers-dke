@@ -39,15 +39,15 @@ public class Tree {
 
                 //make the new nodes for every possible resulting board
                 for(Move m: moves){
-                    Node kid = new Node(n.getGameState().doMove(m), n);
-                    n.addChild(kid);
-                    //check if this player or another as won
-                    if(kid.getGameState().getWinner().getColor() != null){
-                        if(kid.getGameState().getWinner().getColor() == color)
-                            won = true;
-                        else
-                            lost = true;
-                    }
+//                    Node kid = new Node(n.getGameState().doMove(m), n);
+//                    n.addChild(kid);
+//                    //check if this player or another as won
+//                    if(kid.getGameState().getWinner().getColor() != null){
+//                        if(kid.getGameState().getWinner().getColor() == color)
+//                            won = true;
+//                        else
+//                            lost = true;
+//                    }
                 }
                 nodesAtNextDepth.addAll(n.getChildren());
             }

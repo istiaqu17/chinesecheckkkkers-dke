@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * GUI.java
  *
  * Created on 10-Oct-2010, 15:32:52
@@ -34,7 +29,7 @@ public class GUI extends javax.swing.JFrame {
     private JPanel board, newGamePanel, playerOptionPanel;
     private int selectedNumberOfPlayers = -1;
     private JComboBox[] playerOptions;
-    private int framewidth = 600;
+    private int framewidth = 800;
 
     /** Creates new form GUI */
     public GUI() {
@@ -84,14 +79,14 @@ public class GUI extends javax.swing.JFrame {
         int numberOfPlayers = Integer.parseInt(numberOfPlayersString);
         selectedNumberOfPlayers = numberOfPlayers;
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(numberOfPlayers + 1, 2));
+        panel.setLayout(new GridLayout(numberOfPlayers + 1, 2, 0, 5));
         playerOptions = new JComboBox[numberOfPlayers];
         for (int i = 0; i < numberOfPlayers; i++) {
             playerOptions[i] = new JComboBox(typeOfPlayers);
             panel.add(new JLabel("Player " + (i + 1) + ": "));
             panel.add(playerOptions[i]);
         }
-        panel.setBounds(10, newGamePanel.getHeight() + newGamePanel.getY(), 300, numberOfPlayers * 25);
+        panel.setBounds(10, newGamePanel.getHeight() + newGamePanel.getY(), 300, numberOfPlayers * 40);
         playerOptionPanel = panel;
         panel.add(new JLabel());
         panel.add(createNewGameButton());
@@ -101,6 +96,7 @@ public class GUI extends javax.swing.JFrame {
     public JButton createNewGameButton() {
         final JButton button = new JButton("New Game");
         class newGameButtonListener implements ActionListener {
+
             public void actionPerformed(ActionEvent e) {
                 remove(newGamePanel);
                 remove(playerOptionPanel);
@@ -192,11 +188,13 @@ public class GUI extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-        remove(board);
-        newGamePanel = createNewGamePanel();
-        add(newGamePanel);
-        validate();
-        repaint();
+        if (board != null) {
+            remove(board);
+            newGamePanel = createNewGamePanel();
+            add(newGamePanel);
+            validate();
+            repaint();
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
