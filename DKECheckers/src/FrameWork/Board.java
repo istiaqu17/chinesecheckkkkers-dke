@@ -76,8 +76,8 @@ public class Board extends JPanel {
                 positions[i][j] = null;
             }
             for (int j = rowLengths[i][0]; j < rowLengths[i][0] + rowLengths[i][1]; j++) {
-                int x = (positions.length - i - 13) * (this.getWidth() / (2 * positions.length)) + j * (this.getWidth() / (positions.length));
-                int y = i * (this.getWidth() / (positions.length));
+                int x = (positions.length - i - 12) * (this.getWidth() / (2 * positions.length)) + j * (this.getWidth() / (positions.length));
+                int y = i * (this.getHeight() / (positions.length));
                 positions[i][j] = new Position(x, y, i, j, null);
             }
             for (int j = rowLengths[i][0] + rowLengths[i][1]; j < rowLengths.length; j++) {
@@ -182,15 +182,6 @@ public class Board extends JPanel {
                         positions[5][11], positions[5][12], positions[6][11], positions[6][12], positions[7][12]}
                 };
         setupBoard();
-        Position position = positions[0][4];
-        for (int i = 0; i < positions.length; i++) {
-            for (int j = 0; j < positions[i].length; j++) {
-                if (positions[i][j] != null) {
-                    System.out.println("Distance from: " + positions[i][j].getI() + ", " + positions[i][j].getJ() + " to "
-                            + position.getI() + ", " + position.getJ() + " = " + positions[i][j].distanceTo(position));
-                }
-            }
-        }
     }
 
     /*
@@ -325,12 +316,12 @@ public class Board extends JPanel {
 
     // Checks if a move is valid
     public boolean isValidMove(Move move) {
-        for (int i = 0; i < validMovePositions.size(); i++) {
-            if (move.getPositions()[move.getPositions().length - 1] == validMovePositions.get(i)) {
-                return true;
+        for (int i = 1; i < move.getPositions().length; i++){
+            if (!(move.getPositions()[i] != null && move.getPositions()[i].getPiece() == null)){
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     /*
@@ -602,5 +593,12 @@ public class Board extends JPanel {
         }
         return null;
     }
-    //TODO simulation, distance
+
+    // Simulates a move 
+    public void simulateMove(Move move) {
+        if (isValidMove(move)) {
+            Piece piece = move.getPositions()[0].getPiece();
+            move.getPositions()[move.getPositions().length - 1].addPiece(piece);
+        }
+    }
 }
