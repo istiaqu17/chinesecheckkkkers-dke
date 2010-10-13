@@ -5,10 +5,6 @@
 
 package FrameWork;
 
-import FrameWork.Board;
-import FrameWork.Move;
-import FrameWork.Node;
-import FrameWork.Position;
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -33,21 +29,28 @@ public class Tree {
         while(currentDepth < depth && !won && !lost){
             //do things for all nodes at this depth
             for(Node n: nodesAtCurrentDepth){
-                //get all possible next moves for this player
-                for(Position p: n.getGameState().findPieces(color))
+                //get all possible next moves for this player or opponent (only in 2 player mode, more players: change the 2)
+                if(depth % 2 == 0){
+                    for(Position p: n.getGameState().findPieces(color))
                     moves.addAll(n.getGameState().determineValidMoves(p));
+                } else{
+                    for(Position p: n.getGameState().findOpponentsPieces(color)) //you can only do this in 2 player games
+                    moves.addAll(n.getGameState().determineValidMoves(p));
+                }
+
+                
 
                 //make the new nodes for every possible resulting board
                 for(Move m: moves){
-//                    Node kid = new Node(n.getGameState().doMove(m), n);
-//                    n.addChild(kid);
-//                    //check if this player or another as won
-//                    if(kid.getGameState().getWinner().getColor() != null){
-//                        if(kid.getGameState().getWinner().getColor() == color)
-//                            won = true;
-//                        else
-//                            lost = true;
-//                    }
+                    Node kid = new Node(n.getGameState().simulateMove(m), n); // I assumed simulateMove returned a board
+                    n.addChild(kid);
+                    //check if this player or another as won
+                    if(kid.getGameState().getWinner().getColor() != null){
+                        if(kid.getGameState().getWinner().getColor() == color)
+                            won = true;
+                        else
+                            lost = true;
+                    }
                 }
                 nodesAtNextDepth.addAll(n.getChildren());
             }

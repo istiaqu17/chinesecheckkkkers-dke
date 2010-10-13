@@ -530,10 +530,6 @@ public class Board extends JPanel {
         turnPanel.setBounds(400, 10, 80, 40);
     }
 
-    public Position[][] getBoardPositions() {
-        return this.positions;
-    }
-
     //this makes an array with all positions currently occupied by the pieces of this player
     public Position[] findPieces(Color color) {
         int i = 0;
