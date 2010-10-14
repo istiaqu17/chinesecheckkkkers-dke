@@ -42,7 +42,7 @@ public class Tree {
 
                 //make the new nodes for every possible resulting board
                 for(Move m: moves){
-                    Node kid = new Node(n.getGameState().simulateMove(m), n); // I assumed simulateMove returned a board
+                    Node kid = new Node(n.getGameState().simulateMove(m), n);
                     n.addChild(kid);
                     //check if this player or another as won
                     if(kid.getGameState().getWinner().getColor() != null){

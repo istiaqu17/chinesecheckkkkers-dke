@@ -6,11 +6,11 @@ package FrameWork;
  */
 public class Position {
 
-    private double x, y;
+    private int x, y;
     private int i, j;
     private Piece piece;
 
-    public Position(double initX, double initY, int i, int j, Piece p) {
+    public Position(int initX, int initY, int i, int j, Piece p) {
         x = initX;
         y = initY;
         piece = p;
@@ -18,11 +18,11 @@ public class Position {
         this.j = j;
     }
 
-    public double getX() {
+    public int getX() {
         return x;
     }
 
-    public double getY() {
+    public int getY() {
         return y;
     }
 

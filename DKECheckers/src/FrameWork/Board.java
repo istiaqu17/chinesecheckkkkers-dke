@@ -44,6 +44,15 @@ public class Board extends JPanel {
         nextTurn();
     }
 
+
+    //I'm really not sure about this
+    //it should just copy the game state
+    //so I thought you then only need the positions (with pieces) and players
+    public Board(Board b){
+        players = b.players;
+        positions = b.positions;
+    }
+
     /*
      * Resets the starting base of a player by placing all 10 pieces in the starting triangle
      */
@@ -590,11 +599,17 @@ public class Board extends JPanel {
         return null;
     }
 
-    // Simulates a move 
-    public void simulateMove(Move move) {
-        if (isValidMove(move)) {
-            Piece piece = move.getPositions()[0].getPiece();
-            move.getPositions()[move.getPositions().length - 1].addPiece(piece);
+    // Simulates a move
+    // p is the position where the moved piece was before simulation, and p1 is the position were it will be after simulation.
+    public Board simulateMove(Move move) {
+        Board b = new Board(this);
+        if (b.isValidMove(move)) {
+            Position p = b.positions[move.getPositions()[0].getX()][move.getPositions()[0].getY()];
+            Piece piece = p.getPiece();
+            p.removePiece();
+            Position p1 = b.positions[move.getPositions()[move.getPositions().length - 1].getX()][move.getPositions()[move.getPositions().length - 1].getY()];
+            p1.addPiece(piece);
         }
+        return b;
     }
 }
