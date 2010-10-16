@@ -82,4 +82,12 @@ public class RandomAIPlayer implements Player {
     public Position[] getGoal() {
         return goalPositions;
     }
+
+    public Player copy() {
+        Position[] newGoalPositions = new Position[this.getGoal().length];
+        for (int i = 0; i < this.getGoal().length; i++){
+            newGoalPositions[i] = this.getGoal()[i].copy();
+        }
+        return new HumanPlayer(this.getName(), this.getColor(), newGoalPositions);
+    }
 }

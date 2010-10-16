@@ -83,4 +83,8 @@ public class Position {
             }
         }
     }
+
+    public Position copy() {
+        return new Position(this.getX(), this.getY(), this.getI(), this.getJ(), this.getPiece().copy());
+    }
 }

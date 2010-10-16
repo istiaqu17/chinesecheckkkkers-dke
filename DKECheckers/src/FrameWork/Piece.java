@@ -17,4 +17,8 @@ public class Piece {
         return color;
     }
 
+    public Piece copy() {
+        return new Piece(this.getColor());
+    }
+
 }

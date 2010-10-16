@@ -38,8 +38,6 @@ public class Tree {
                     moves.addAll(n.getGameState().determineValidMoves(p));
                 }
 
-                
-
                 //make the new nodes for every possible resulting board
                 for(Move m: moves){
                     Node kid = new Node(n.getGameState().simulateMove(m), n);

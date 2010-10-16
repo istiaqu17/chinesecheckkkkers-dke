@@ -33,5 +33,7 @@ public interface Player
 
         boolean isHuman();
 
+    public Player copy();
+
 }
 

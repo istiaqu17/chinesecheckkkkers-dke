@@ -11,10 +11,9 @@
 
 package Test;
 
-import Players.HumanPlayer;
 import Players.Player;
 import FrameWork.*;
-import Players.RandomAIPlayer;
+import Players.HumanPlayer;
 import javax.swing.JFrame;
 
 
@@ -23,7 +22,7 @@ import javax.swing.JFrame;
  * @author Rik
  */
 public class BoardFrame extends JFrame {
-    private Player[] players = new Player[]{new RandomAIPlayer(), new RandomAIPlayer(), new RandomAIPlayer(), new RandomAIPlayer(), new RandomAIPlayer(), new RandomAIPlayer()};
+    private Player[] players = new Player[]{new HumanPlayer(), new HumanPlayer(), new HumanPlayer(), new HumanPlayer()};
 
     /** Creates new form BoardFrame */
     public BoardFrame() {
