@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package FrameWork;
 
 import java.awt.Color;
@@ -10,7 +5,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Stefan
+ * @author Stefan, Sara van de Moosdijk
  */
 public class Tree {
     private Node root;
@@ -56,5 +51,34 @@ public class Tree {
             nodesAtCurrentDepth = nodesAtNextDepth;
             depth++;
         }
+    }
+    
+    public void evaluate(Node toEvaluate, Color aColor) 
+    {
+    	//1. Check if the move is a winning move.
+    	if (toEvaluate.getGameState().getWinner() != null) 
+    	{
+    		//Add a lot of points if the winner is the player.
+    		if(toEvaluate.getGameState().getWinner().getColor() == aColor) {toEvaluate.addToValue(1000);}
+    		//Subtract a lot of points if the winner is the opponent.
+    		else {toEvaluate.addToValue(-1000);}
+    	}
+    	
+    	//2. Check the total distance from the goal.
+    	
+    	//3. Check the total distance between the player's pieces (grouping factor).
+    	Position[] myGuys = toEvaluate.getGameState().findPieces(aColor);
+    	int totalDistance = 0;
+    	for(Position p: myGuys) 
+    	{
+    		for(Position p2: myGuys) 
+    		{
+    			totalDistance += p.distanceTo(p2);
+    		}
+    	}
+    	toEvaluate.addToValue(totalDistance/2);
+    	
+    	//4. Check how close the player's pieces are to the centerline.
+    	
     }
 }
