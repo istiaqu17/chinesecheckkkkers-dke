@@ -9,12 +9,13 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Stefan
+ * @author Stefan, Sara van de Moosdijk
  */
 public class Node {
     private Node parent;
     private ArrayList<Node> children;
     private Board gameState;
+    private int value = 0;
 
     public Node(Board b){
         gameState = b;
@@ -45,5 +46,13 @@ public class Node {
 
     public boolean isRoot(){
         return parent == null;
+    }
+    
+    public void addToValue(int aValue){
+    	value = value + aValue;
+    }
+    
+    public int getValue(){
+    	return value;
     }
 }
