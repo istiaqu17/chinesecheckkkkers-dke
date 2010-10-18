@@ -53,6 +53,7 @@ private String name;
                    }
             }
         }
+
         moved = true;
         return toBeMade;
     }
@@ -96,5 +97,4 @@ private String name;
         }
         return new BruteForceAI(this.getName(), this.getColor(), newGoalPositions);
     }
-
 }

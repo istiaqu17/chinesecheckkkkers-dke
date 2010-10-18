@@ -6,6 +6,7 @@
 package GUI;
 
 import FrameWork.Board;
+import Players.BruteForceAI;
 import Players.HumanPlayer;
 import Players.Player;
 import Players.RandomAIPlayer;
@@ -18,6 +19,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
 /**
  *
@@ -25,10 +27,11 @@ import javax.swing.JRadioButton;
  */
 public class GUI extends javax.swing.JFrame {
 
-    private String[] typeOfPlayers = new String[]{"Human Player", "Random AI"};
+    private String[] typeOfPlayers = new String[]{"Human Player", "Random AI", "Brute Force"};
     private JPanel board, newGamePanel, playerOptionPanel;
     private int selectedNumberOfPlayers = -1;
     private JComboBox[] playerOptions;
+    private JTextField[] playerNames;
     private int framewidth = 800;
 
     /** Creates new form GUI */
@@ -79,14 +82,17 @@ public class GUI extends javax.swing.JFrame {
         int numberOfPlayers = Integer.parseInt(numberOfPlayersString);
         selectedNumberOfPlayers = numberOfPlayers;
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(numberOfPlayers + 1, 2, 0, 5));
+        panel.setLayout(new GridLayout(numberOfPlayers + 1, 3, 5, 5));
         playerOptions = new JComboBox[numberOfPlayers];
+        playerNames = new JTextField[numberOfPlayers];
         for (int i = 0; i < numberOfPlayers; i++) {
-            playerOptions[i] = new JComboBox(typeOfPlayers);
             panel.add(new JLabel("Player " + (i + 1) + ": "));
+            playerOptions[i] = new JComboBox(typeOfPlayers);
             panel.add(playerOptions[i]);
+            playerNames[i] = new JTextField("Player " + i, 15);
+            panel.add(playerNames[i]);
         }
-        panel.setBounds(10, newGamePanel.getHeight() + newGamePanel.getY(), 300, numberOfPlayers * 40);
+        panel.setBounds(10, newGamePanel.getHeight() + newGamePanel.getY(), 600, numberOfPlayers * 40);
         playerOptionPanel = panel;
         panel.add(new JLabel());
         panel.add(createNewGameButton());
@@ -101,13 +107,32 @@ public class GUI extends javax.swing.JFrame {
                 remove(newGamePanel);
                 remove(playerOptionPanel);
                 Player[] players = new Player[selectedNumberOfPlayers];
+                String name;
                 for (int i = 0; i < selectedNumberOfPlayers; i++) {
                     switch (playerOptions[i].getSelectedIndex()) {
                         case 0:
                             players[i] = new HumanPlayer();
+                            name = playerNames[i].getText();
+                            if (name.equalsIgnoreCase("")){
+                                name = "Player " + (i + 1);
+                            }
+                            players[i].setName(name);
                             break;
                         case 1:
                             players[i] = new RandomAIPlayer();
+                            name = playerNames[i].getText();
+                            if (name.equalsIgnoreCase("")){
+                                name = "Player " + (i + 1);
+                            }
+                            players[i].setName(name);
+                            break;
+                        case 2:
+                            players[i] = new BruteForceAI();
+                            name = playerNames[i].getText();
+                            if (name.equalsIgnoreCase("")){
+                                name = "Player " + (i + 1);
+                            }
+                            players[i].setName(name);
                             break;
                     }
                 }

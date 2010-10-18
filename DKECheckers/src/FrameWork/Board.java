@@ -40,7 +40,7 @@ public class Board extends JPanel {
         this.setSize(size, size);
         this.players = players;
         createBoard();
-        createTurnPanel();
+        createTurnPanel(players[0]);
         nextTurn();
     }
 
@@ -172,13 +172,13 @@ public class Board extends JPanel {
                         positions[2][6], positions[3][4], positions[3][5], positions[3][6], positions[3][7]},
                     {positions[4][0], positions[4][1], positions[4][2], positions[4][3], positions[5][1],
                         positions[5][2], positions[5][3], positions[6][2], positions[6][3], positions[7][3]},
-                    {positions[9][4], positions[10][4], positions[10][5], positions[11][4], positions[11][5],
-                        positions[11][6], positions[12][4], positions[12][5], positions[12][6], positions[12][7]},
-                    {positions[13][9], positions[13][10], positions[13][11], positions[13][12], positions[14][10],
-                        positions[14][11], positions[14][12], positions[15][11], positions[15][12], positions[16][12]},
-                    {positions[9][13], positions[10][13], positions[10][14], positions[11][13], positions[11][14],
-                        positions[11][15], positions[12][13], positions[12][14], positions[12][15], positions[12][16]},
-                    {positions[4][9], positions[4][10], positions[4][11], positions[4][12], positions[5][10],
+                    {positions[12][4], positions[9][4], positions[10][4], positions[10][5], positions[11][4], positions[11][5],
+                        positions[11][6], positions[12][5], positions[12][6], positions[12][7]},
+                    {positions[16][12], positions[13][9], positions[13][10], positions[13][11], positions[13][12], positions[14][10],
+                        positions[14][11], positions[14][12], positions[15][11], positions[15][12]},
+                    {positions[12][16], positions[9][13], positions[10][13], positions[10][14], positions[11][13], positions[11][14],
+                        positions[11][15], positions[12][13], positions[12][14], positions[12][15]},
+                    {positions[4][12], positions[4][9], positions[4][10], positions[4][11], positions[5][10],
                         positions[5][11], positions[5][12], positions[6][11], positions[6][12], positions[7][12]}
                 };
         setupBoard();
@@ -500,7 +500,7 @@ public class Board extends JPanel {
     private void nextTurn() {
         if (!checkForWinner()) {
             turn = (turn + 1) % players.length;
-            turnPanel.setBackground(players[turn].getColor());
+            createTurnPanel(players[turn]);
             allowPieceSelection = true;
             if (players[turn].isHuman()) {
                 allowMouseInput = true;
@@ -509,7 +509,7 @@ public class Board extends JPanel {
             }
         } else {
             JOptionPane.showMessageDialog(this,
-                    "Player " + (turn + 1) + " is the winner",
+                    "Player " + players[turn].getName() + " is the winner",
                     "We have a winner",
                     JOptionPane.PLAIN_MESSAGE);
             allowMouseInput = false;
@@ -519,15 +519,19 @@ public class Board extends JPanel {
     /*
      * Shows who's turn it is
      */
-    private void createTurnPanel() {
+    private void createTurnPanel(Player player) {
+        if (turnPanel != null){
+            remove(turnPanel);
+        }
         turnPanel = new JPanel();
-        JLabel label = new JLabel("Turn: ");
+        turnPanel.setBackground(player.getColor());
+        JLabel label = new JLabel(player.getName());
         label.setForeground(Color.DARK_GRAY);
+        label.setBounds(2, 2, 50, 50);
         turnPanel.add(label);
-        this.setLayout(null);
         turnPanel.setFocusable(false);
+        turnPanel.setBounds(400, 10, 120, 60);
         add(turnPanel);
-        turnPanel.setBounds(400, 10, 80, 40);
     }
 
     //this makes an array with all positions currently occupied by the pieces of this player

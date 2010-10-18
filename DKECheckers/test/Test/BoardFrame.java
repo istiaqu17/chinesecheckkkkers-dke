@@ -14,7 +14,6 @@ package Test;
 import Players.Player;
 import FrameWork.*;
 import Players.BruteForceAI;
-import Players.HumanPlayer;
 import javax.swing.JFrame;
 
 
@@ -23,7 +22,7 @@ import javax.swing.JFrame;
  * @author Rik
  */
 public class BoardFrame extends JFrame {
-    private Player[] players = new Player[]{new HumanPlayer(), new HumanPlayer(), new HumanPlayer()};
+    private Player[] players = new Player[]{new BruteForceAI(),new BruteForceAI(),new BruteForceAI(),new BruteForceAI(),new BruteForceAI(),new BruteForceAI(),};
 
     /** Creates new form BoardFrame */
     public BoardFrame() {
