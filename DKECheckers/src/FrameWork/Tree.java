@@ -3,6 +3,8 @@ package FrameWork;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import Players.Player;
+
 /**
  *
  * @author Stefan, Sara van de Moosdijk
@@ -21,7 +23,7 @@ public class Tree {
         ArrayList<Node> nodesAtNextDepth = new ArrayList<Node>();
         nodesAtCurrentDepth.add(root);
 
-        //make the tree until a certion depth or until someone wins
+        //make the tree until a certain depth or until someone wins
         while (currentDepth < depth && !won && !lost) {
             //do things for all nodes at this depth
             for (Node n : nodesAtCurrentDepth) {
@@ -56,33 +58,44 @@ public class Tree {
             nodesAtCurrentDepth = nodesAtNextDepth;
             depth++;
         }
-    }
-
-    public void evaluate(Node toEvaluate, Color aColor) {
-        //1. Check if the move is a winning move.
-        if (toEvaluate.getGameState().getWinner() != null) {
-            //Add a lot of points if the winner is the player.
-            if (toEvaluate.getGameState().getWinner().getColor() == aColor) {
-                toEvaluate.addToValue(1000);
-            } //Subtract a lot of points if the winner is the opponent.
-            else {
-                toEvaluate.addToValue(-1000);
-            }
-        }
-
-        //2. Check the total distance from the goal.
-
-        //3. Check the total distance between the player's pieces (grouping factor).
-        Position[] myGuys = toEvaluate.getGameState().findPieces(aColor);
-        int totalDistance = 0;
-        for (Position p : myGuys) {
-            for (Position p2 : myGuys) {
-                totalDistance += p.distanceTo(p2);
-            }
-        }
-        toEvaluate.addToValue(totalDistance / 2);
-
-        //4. Check how close the player's pieces are to the centerline.
 
     }
-}
+    
+    public void evaluate(Node node, Player player) 
+    {
+    	//1. Check if the move is a winning move.
+    	if (node.getGameState().getWinner() != null) 
+    	{
+    		//Add a lot of points if the winner is the player.
+    		if(node.getGameState().getWinner() == player) {node.addToValue(1000);}
+    		//Subtract a lot of points if the winner is the opponent.
+    		else {node.addToValue(-1000);}
+    	}
+    	
+    	Position[] positions = node.getGameState().findPieces(player.getColor());
+    	
+    	//2. Check the total distance from the goal.
+    	int totalDistanceGoal = 0;
+    	Position[] goal = player.getGoal();
+    	Position checkpoint = goal[1];
+    	for(Position p: positions) 
+    	{
+    		totalDistanceGoal += p.distanceTo(checkpoint);
+    	}
+    	node.addToValue(totalDistanceGoal/2);
+    	
+    	//3. Check the total distance between the player's pieces (grouping factor).
+    	int totalDistancePieces = 0;
+    	for(Position p: positions) 
+    	{
+    		for(Position p2: positions) 
+    		{
+    			totalDistancePieces += p.distanceTo(p2);
+    		}
+    	}
+    	node.addToValue(totalDistancePieces/2);
+    	
+    	//4. Check how close the player's pieces are to the centerline.
+    	}
+
+    }
