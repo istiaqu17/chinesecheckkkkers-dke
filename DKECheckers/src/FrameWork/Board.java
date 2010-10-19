@@ -170,16 +170,16 @@ public class Board extends JPanel {
          */
         playerBases = new Position[][]{{positions[0][4], positions[1][4], positions[1][5], positions[2][4], positions[2][5],
                         positions[2][6], positions[3][4], positions[3][5], positions[3][6], positions[3][7]},
-                    {positions[4][0], positions[4][1], positions[4][2], positions[4][3], positions[5][1],
-                        positions[5][2], positions[5][3], positions[6][2], positions[6][3], positions[7][3]},
-                    {positions[12][4], positions[9][4], positions[10][4], positions[10][5], positions[11][4], positions[11][5],
-                        positions[11][6], positions[12][5], positions[12][6], positions[12][7]},
-                    {positions[16][12], positions[13][9], positions[13][10], positions[13][11], positions[13][12], positions[14][10],
-                        positions[14][11], positions[14][12], positions[15][11], positions[15][12]},
-                    {positions[12][16], positions[9][13], positions[10][13], positions[10][14], positions[11][13], positions[11][14],
-                        positions[11][15], positions[12][13], positions[12][14], positions[12][15]},
-                    {positions[4][12], positions[4][9], positions[4][10], positions[4][11], positions[5][10],
-                        positions[5][11], positions[5][12], positions[6][11], positions[6][12], positions[7][12]}
+                    {positions[4][0], positions[5][1], positions[4][1], positions[6][2], positions[5][2],
+                        positions[4][2], positions[7][3], positions[6][3], positions[5][3], positions[4][3]},
+                    {positions[12][4], positions[12][5], positions[11][4], positions[12][6], positions[11][5], positions[10][4],
+                        positions[12][7], positions[11][6], positions[10][5], positions[9][4]},
+                    {positions[16][12], positions[15][11], positions[15][12], positions[14][10], positions[14][11], positions[14][12],
+                        positions[13][9], positions[13][10], positions[13][11], positions[13][12]},
+                    {positions[12][16], positions[12][15], positions[11][15], positions[12][14], positions[11][14], positions[10][14],
+                        positions[12][13], positions[11][13], positions[10][13], positions[9][13]},
+                    {positions[4][12], positions[5][12], positions[4][11], positions[6][12], positions[5][11],
+                        positions[4][10], positions[7][12], positions[6][11], positions[5][10], positions[4][9]}
                 };
         setupBoard();
     }

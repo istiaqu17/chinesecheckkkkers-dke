@@ -89,7 +89,7 @@ public class GUI extends javax.swing.JFrame {
             panel.add(new JLabel("Player " + (i + 1) + ": "));
             playerOptions[i] = new JComboBox(typeOfPlayers);
             panel.add(playerOptions[i]);
-            playerNames[i] = new JTextField("Player " + i, 15);
+            playerNames[i] = new JTextField("Player " + (i + 1), 15);
             panel.add(playerNames[i]);
         }
         panel.setBounds(10, newGamePanel.getHeight() + newGamePanel.getY(), 600, numberOfPlayers * 40);
