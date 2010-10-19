@@ -35,7 +35,7 @@ private String name;
     public Move makeMove(Board board){
 
         Position[] currentPositions = board.findPieces(color);
-        int maxMoved = 0;
+        int maxMoved = -1;
         Move toBeMade = null;
         boolean moved = false;
 
@@ -48,15 +48,40 @@ private String name;
                 int number_of_hops = countHops(moveSimulated);
                 Boolean forward = checkForward(moveSimulated);
                    
-                if (number_of_hops >= maxMoved || forward) {
-                    maxMoved = number_of_hops;
-                    toBeMade = moveSimulated;
-                }      
+                if (number_of_hops > maxMoved) {
+                    if (forward) {
+                        maxMoved = number_of_hops;
+                        toBeMade = moveSimulated;
+                    }
+                }
+                else if(number_of_hops == maxMoved) {
+                    toBeMade = checkBest(toBeMade, moveSimulated);
+                }
             }
         }
+        System.out.println("maxMoved: " + maxMoved);
 
         moved = true;
         return toBeMade;
+    }
+
+
+    public Move checkBest(Move moveCurrent, Move moveChallenging) {
+        Position[] currentMovePositions = moveCurrent.getPositions();
+        Position[] challengingMovePositions = moveChallenging.getPositions();
+        Position[] goal = getGoal();
+        int distanceCurrent1 = currentMovePositions[0].distanceTo(goal[0]);
+        int distanceCurrent2 = currentMovePositions[currentMovePositions.length - 1].distanceTo(goal[0]);
+
+        int distanceChallenging1 = challengingMovePositions[0].distanceTo(goal[0]);
+        int distanceChallenging2 = challengingMovePositions[challengingMovePositions.length-1].distanceTo(goal[0]);
+
+        if (distanceChallenging1-distanceChallenging2 >= distanceCurrent1 - distanceCurrent2) {
+            return moveChallenging;
+        }
+        return moveCurrent;
+
+
     }
 
     public int countHops(Move move) {
@@ -76,7 +101,7 @@ private String name;
         int distance1 = simulatedPositions[0].distanceTo(goal[0]);
         int distance2 = simulatedPositions[simulatedPositions.length - 1].distanceTo(goal[0]);
 
-        if(distance1 > distance2) {
+        if(distance1 >= distance2) {
             return true;
         }
         return false;
