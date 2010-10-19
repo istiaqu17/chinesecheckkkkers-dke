@@ -7,12 +7,13 @@ package Players;
 
 import FrameWork.Board;
 import FrameWork.Move;
+import FrameWork.Node;
 import FrameWork.Position;
 import java.awt.Color;
 
 /**
  *
- * @author Rik Claessens
+ * @author Rik Claessens, Sara van de Moosdijk
  */
 public class Minimax implements Player{
     private String name;
@@ -67,5 +68,44 @@ public class Minimax implements Player{
         }
         return new HumanPlayer(this.getName(), this.getColor(), newGoalPositions);
     }
+    
+    public void evaluate(Node node) 
+    {
+    	//1. Check if the move is a winning move.
+    	if (node.getGameState().getWinner() != null) 
+    	{
+    		//Add a lot of points if the winner is the player.
+    		if(node.getGameState().getWinner() == this) {node.addToValue(1000);}
+    		//Subtract a lot of points if the winner is the opponent.
+    		else {node.addToValue(-1000);}
+    	}
+    	
+    	Position[] positions = node.getGameState().findPieces(color);
+    	
+    	//2. Check the total distance from the goal.
+    	int totalDistanceGoal = 0;
+    	Position checkpoint = goalPositions[1];
+    	for(Position p: positions) 
+    	{
+    		totalDistanceGoal += p.distanceTo(checkpoint);
+    	}
+    	node.addToValue(totalDistanceGoal/2);
+    	
+    	//3. Check the total distance between the player's pieces (grouping factor).
+    	int totalDistancePieces = 0;
+    	for(Position p: positions) 
+    	{
+    		for(Position p2: positions) 
+    		{
+    			totalDistancePieces += p.distanceTo(p2);
+    		}
+    	}
+    	node.addToValue(totalDistancePieces/2);
+    	
+    	//4. Check how close the player's pieces are to the centerline.
+    	
+    	//5. Check how close the player's pieces are to the opponent's pieces. 
+    	
+    	}
 
 }
