@@ -44,13 +44,14 @@ private String name;
             ArrayList<Move> validMoves = board.determineValidMoves(currentPositions[i]);
 
             for (int j = 0; j < validMoves.size(); j++) {
-                   Move moveSimulated = validMoves.get(j);
-                   int number_of_hops = countHops(moveSimulated);
-
-                   if (number_of_hops >= maxMoved) {
-                       maxMoved = number_of_hops;
-                       toBeMade = moveSimulated;
-                   }
+                Move moveSimulated = validMoves.get(j);
+                int number_of_hops = countHops(moveSimulated);
+                Boolean forward = checkForward(moveSimulated);
+                   
+                if (number_of_hops >= maxMoved || forward) {
+                    maxMoved = number_of_hops;
+                    toBeMade = moveSimulated;
+                }      
             }
         }
 
@@ -67,6 +68,18 @@ private String name;
             return 0;
         }
         return length;
+    }
+
+    public Boolean checkForward(Move move) {
+        Position[] simulatedPositions = move.getPositions();
+        Position[] goal = getGoal();
+        int distance1 = simulatedPositions[0].distanceTo(goal[0]);
+        int distance2 = simulatedPositions[simulatedPositions.length - 1].distanceTo(goal[0]);
+
+        if(distance1 > distance2) {
+            return true;
+        }
+        return false;
     }
 
     public void setColor(Color aColor){
