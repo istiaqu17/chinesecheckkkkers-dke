@@ -69,27 +69,28 @@ public class Minimax implements Player{
         return new HumanPlayer(this.getName(), this.getColor(), newGoalPositions);
     }
     
-    public void evaluate(Node node) 
+    public int evaluate(Node node) 
     {
+    	int value = 0;
     	//1. Check if the move is a winning move.
     	if (node.getGameState().getWinner() != null) 
     	{
     		//Add a lot of points if the winner is the player.
-    		if(node.getGameState().getWinner() == this) {node.addToValue(1000);}
+    		if(node.getGameState().getWinner() == this) {value += 1000;}
     		//Subtract a lot of points if the winner is the opponent.
-    		else {node.addToValue(-1000);}
+    		else {value -= 1000;}
     	}
     	
     	Position[] positions = node.getGameState().findPieces(color);
     	
     	//2. Check the total distance from the goal.
     	int totalDistanceGoal = 0;
-    	Position checkpoint = goalPositions[1];
+    	Position checkpoint = goalPositions[0];
     	for(Position p: positions) 
     	{
     		totalDistanceGoal += p.distanceTo(checkpoint);
     	}
-    	node.addToValue(totalDistanceGoal/2);
+    	value += totalDistanceGoal/2;
     	
     	//3. Check the total distance between the player's pieces (grouping factor).
     	int totalDistancePieces = 0;
@@ -100,12 +101,13 @@ public class Minimax implements Player{
     			totalDistancePieces += p.distanceTo(p2);
     		}
     	}
-    	node.addToValue(totalDistancePieces/2);
+    	value += totalDistancePieces/2;
     	
     	//4. Check how close the player's pieces are to the centerline.
     	
     	//5. Check how close the player's pieces are to the opponent's pieces. 
     	
+    	return value;
     	}
 
 }
