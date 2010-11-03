@@ -1,14 +1,17 @@
+package Players;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 
-package Players;
+
 
 import FrameWork.Board;
 import FrameWork.Move;
 import FrameWork.Node;
 import FrameWork.Position;
+import FrameWork.Tree;
 import java.awt.Color;
 
 /**
@@ -55,10 +58,10 @@ public class Minimax implements Player{
     }
 
     public Move makeMove(Board b) {
-        throw new UnsupportedOperationException("Not supported yet.");
-//        int treeDepth = 1;
-//        Tree gameTree = new Tree(b, treeDepth, color);
-
+//        throw new UnsupportedOperationException("Not supported yet.");
+        int treeDepth = 1;
+        Tree gameTree = new Tree(b, treeDepth);
+        return getMinimaxNode(gameTree.getRoot()).getMove();
     }
 
     public Player copy() {
@@ -110,4 +113,37 @@ public class Minimax implements Player{
     	return value;
     	}
 
+    public Node getMinimaxNode(Node n){
+        Player[] players = n.getGameState().getPlayers();
+        int turn = n.getGameState().getTurn();
+
+        if(n.getChildren() == null){
+            n.setValue(evaluate(n));
+            return n;
+        }
+        else{
+            //only 2 players, I'll change that later, first make this working
+            if(players[turn] == this){
+                Node max = null;
+                for(Node kid: n.getChildren()){
+                    if(max == null)
+                        max = kid;
+                    else if(getMinimaxNode(kid).getValue() > max.getValue())
+                        max = kid;
+                }
+                return max;
+            }
+            else{
+                Node min = null;
+                for(Node kid: n.getChildren()){
+                    if(min == null)
+                        min = kid;
+                    else if(getMinimaxNode(kid).getValue() < min.getValue())
+                        min = kid;
+                }
+                return min;
+            }
+        }
+
+    }
 }

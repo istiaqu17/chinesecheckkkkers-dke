@@ -1,5 +1,7 @@
 package FrameWork;
 
+
+
 import Players.Player;
 import java.awt.*;
 import java.awt.event.*;
@@ -616,5 +618,13 @@ public class Board extends JPanel {
         }
         Board board = new Board(this.turn, newPlayers);
         return board;
+    }
+
+    public Player[] getPlayers(){
+        return players;
+    }
+
+    public int getTurn(){
+        return turn;
     }
 }

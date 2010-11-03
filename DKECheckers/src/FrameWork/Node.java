@@ -1,9 +1,11 @@
+package FrameWork;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 
-package FrameWork;
+
 
 import java.util.ArrayList;
 
@@ -16,16 +18,18 @@ public class Node {
     private ArrayList<Node> children;
     private Board gameState;
     private int value = 0;
+    private Move move;
 
     public Node(Board b){
         gameState = b;
         children = new ArrayList<Node>();
     }
 
-    public Node(Board b, Node p){
+    public Node(Board b, Node p, Move m){
         gameState = b;
         children = new ArrayList<Node>();
         parent = p;
+        move = m;
     }
 
     public void addChild(Node c){
@@ -48,11 +52,15 @@ public class Node {
         return parent == null;
     }
     
-    public void addToValue(int aValue){
-    	value = value + aValue;
+    public void setValue(int aValue){
+    	value = aValue;
     }
     
     public int getValue(){
     	return value;
+    }
+
+    public Move getMove(){
+        return move;
     }
 }
