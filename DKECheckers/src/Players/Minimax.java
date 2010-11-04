@@ -23,6 +23,10 @@ public class Minimax implements Player{
     private Color color;
     private Position[] goalPositions;
 
+    public Minimax(){
+        
+    }
+
     public Minimax(String name, Color color, Position[] goal){
         this.name = name;
         this.color = color;
@@ -59,7 +63,7 @@ public class Minimax implements Player{
 
     public Move makeMove(Board b) {
 //        throw new UnsupportedOperationException("Not supported yet.");
-        int treeDepth = 1;
+        int treeDepth = 2;
         Tree gameTree = new Tree(b, treeDepth);
         return getMinimaxNode(gameTree.getRoot()).getMove();
     }
@@ -131,7 +135,7 @@ public class Minimax implements Player{
                     else if(getMinimaxNode(kid).getValue() > max.getValue())
                         max = kid;
                 }
-                return max;
+                n.setValue(max.getValue());
             }
             else{
                 Node min = null;
@@ -141,8 +145,9 @@ public class Minimax implements Player{
                     else if(getMinimaxNode(kid).getValue() < min.getValue())
                         min = kid;
                 }
-                return min;
+                n.setValue(min.getValue()); 
             }
+            return n;
         }
 
     }
