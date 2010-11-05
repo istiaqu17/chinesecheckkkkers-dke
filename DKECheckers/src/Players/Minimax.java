@@ -6,7 +6,6 @@ package Players;
  */
 
 
-
 import FrameWork.Board;
 import FrameWork.Move;
 import FrameWork.Node;
@@ -18,7 +17,8 @@ import java.awt.Color;
  *
  * @author Rik Claessens, Sara van de Moosdijk
  */
-public class Minimax implements Player{
+public class Minimax implements Player {
+
     private String name;
     private Color color;
     private Position[] goalPositions;
@@ -70,7 +70,7 @@ public class Minimax implements Player{
 
     public Player copy() {
         Position[] newGoalPositions = new Position[this.getGoal().length];
-        for (int i = 0; i < this.getGoal().length; i++){
+        for (int i = 0; i < this.getGoal().length; i++) {
             newGoalPositions[i] = this.getGoal()[i].copy();
         }
         return new HumanPlayer(this.getName(), this.getColor(), newGoalPositions);

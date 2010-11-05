@@ -601,10 +601,10 @@ public class Board extends JPanel {
     public Board simulateMove(Move move) {
         Board b = this.copy();
         if (b.isValidMove(move)) {
-            Position p = b.positions[move.getPositions()[0].getX()][move.getPositions()[0].getY()];
+            Position p = b.positions[move.getPositions()[0].getI()][move.getPositions()[0].getJ()];
             Piece piece = p.getPiece();
             p.removePiece();
-            Position p1 = b.positions[move.getPositions()[move.getPositions().length - 1].getX()][move.getPositions()[move.getPositions().length - 1].getY()];
+            Position p1 = b.positions[move.getPositions()[move.getPositions().length - 1].getI()][move.getPositions()[move.getPositions().length - 1].getJ()];
             p1.addPiece(piece);
         }
         return b;

@@ -8,6 +8,7 @@ package GUI;
 import FrameWork.Board;
 import Players.BruteForceAI;
 import Players.HumanPlayer;
+import Players.Minimax;
 import Players.Player;
 import Players.RandomAIPlayer;
 import java.awt.GridLayout;
@@ -27,7 +28,7 @@ import javax.swing.JTextField;
  */
 public class GUI extends javax.swing.JFrame {
 
-    private String[] typeOfPlayers = new String[]{"Human Player", "Random AI", "Brute Force"};
+    private String[] typeOfPlayers = new String[]{"Human Player", "Random AI", "Brute Force", "MiniMax"};
     private JPanel board, newGamePanel, playerOptionPanel;
     private int selectedNumberOfPlayers = -1;
     private JComboBox[] playerOptions;
@@ -113,7 +114,7 @@ public class GUI extends javax.swing.JFrame {
                         case 0:
                             players[i] = new HumanPlayer();
                             name = playerNames[i].getText();
-                            if (name.equalsIgnoreCase("")){
+                            if (name.equalsIgnoreCase("")) {
                                 name = "Player " + (i + 1);
                             }
                             players[i].setName(name);
@@ -121,7 +122,7 @@ public class GUI extends javax.swing.JFrame {
                         case 1:
                             players[i] = new RandomAIPlayer();
                             name = playerNames[i].getText();
-                            if (name.equalsIgnoreCase("")){
+                            if (name.equalsIgnoreCase("")) {
                                 name = "Player " + (i + 1);
                             }
                             players[i].setName(name);
@@ -129,7 +130,15 @@ public class GUI extends javax.swing.JFrame {
                         case 2:
                             players[i] = new BruteForceAI();
                             name = playerNames[i].getText();
-                            if (name.equalsIgnoreCase("")){
+                            if (name.equalsIgnoreCase("")) {
+                                name = "Player " + (i + 1);
+                            }
+                            players[i].setName(name);
+                            break;
+                        case 3:
+                            players[i] = new Minimax();
+                            name = playerNames[i].getText();
+                            if (name.equalsIgnoreCase("")) {
                                 name = "Player " + (i + 1);
                             }
                             players[i].setName(name);
