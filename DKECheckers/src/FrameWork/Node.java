@@ -23,6 +23,8 @@ public class Node {
     public Node(Board b){
         gameState = b;
         children = new ArrayList<Node>();
+        parent = null;
+        move = null;
     }
 
     public Node(Board b, Node p, Move m){
@@ -62,5 +64,15 @@ public class Node {
 
     public Move getMove(){
         return move;
+    }
+
+    public int getDepth(){
+        int depth = 0;
+        Node node = this;
+        while (node.getParent() != null){
+            node = node.getParent();
+            depth++;
+        }
+        return depth;
     }
 }

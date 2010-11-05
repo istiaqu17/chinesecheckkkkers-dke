@@ -607,6 +607,11 @@ public class Board extends JPanel {
             Position p1 = b.positions[move.getPositions()[move.getPositions().length - 1].getI()][move.getPositions()[move.getPositions().length - 1].getJ()];
             p1.addPiece(piece);
         }
+        for (int i = 0; i < players.length; i++){
+            if (players[i].getColor() == move.getPositions()[0].getPiece().getColor()){
+                turn = i;
+            }
+        }
         return b;
     }
 
@@ -616,8 +621,17 @@ public class Board extends JPanel {
         for (int i = 0; i < players.length; i++){
             newPlayers[i] = players[i].copy();
         }
+        Position[][] newPositions = new Position[positions.length][positions[0].length];
         Board board = new Board(this.turn, newPlayers);
+        board.setPositions(positions);
         return board;
+    }
+    public void setPositions(Position[][] positions){
+        for (int i = 0; i < positions.length; i++){
+            for (int j = 0; j < positions[i].length; j++){
+                this.positions[i][j] = positions[i][j].copy();
+            }
+        }
     }
 
     public Player[] getPlayers(){

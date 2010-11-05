@@ -7,18 +7,22 @@ import java.awt.Color;
  * @author Stefan
  */
 public class Piece {
+
     private Color color;
 
-    public Piece(Color color){
+    public Piece(Color color) {
         this.color = color;
     }
 
-    public Color getColor(){
+    public Color getColor() {
         return color;
     }
 
     public Piece copy() {
-        return new Piece(this.getColor());
+        if (this == null) {
+            return null;
+        } else {
+            return new Piece(this.getColor());
+        }
     }
-
 }
