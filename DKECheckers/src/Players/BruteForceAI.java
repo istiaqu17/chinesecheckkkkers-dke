@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class BruteForceAI implements Player {
 private String name;
     private Color color;
-    private Position[] goalPositions;
+    private Position[] goalPositions, basePositions;
 
     public BruteForceAI(String aName, Color aColor, Position[] goal){
         color = aColor;
@@ -38,7 +38,6 @@ private String name;
         int maxMoved = -1;
         Move toBeMade = null;
         boolean moved = false;
-
 
         for (int i = 0; i < currentPositions.length ; i++) {
             ArrayList<Move> validMoves = board.determineValidMoves(currentPositions[i]);
@@ -80,8 +79,6 @@ private String name;
             return moveChallenging;
         }
         return moveCurrent;
-
-
     }
 
     public int countHops(Move move) {
@@ -134,5 +131,13 @@ private String name;
             newGoalPositions[i] = this.getGoal()[i].copy();
         }
         return new BruteForceAI(this.getName(), this.getColor(), newGoalPositions);
+    }
+
+    public void setBase(Position[] base) {
+        basePositions = base;
+    }
+
+    public Position[] getBase() {
+        return basePositions;
     }
 }

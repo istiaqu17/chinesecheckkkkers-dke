@@ -14,7 +14,7 @@ public class HumanPlayer implements Player {
 
     private String name;
     private Color color;
-    private Position[] goalPositions;
+    private Position[] goalPositions, basePositions;
 
     public HumanPlayer() {
         name = " ";
@@ -65,5 +65,13 @@ public class HumanPlayer implements Player {
             newGoalPositions[i] = goalPositions[i].copy();
         }
         return new HumanPlayer(this.getName(), this.getColor(), newGoalPositions);
+    }
+
+    public void setBase(Position[] base) {
+        basePositions = base;
+    }
+
+    public Position[] getBase() {
+        return basePositions;
     }
 }

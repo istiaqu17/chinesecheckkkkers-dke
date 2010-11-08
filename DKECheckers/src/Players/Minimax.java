@@ -20,8 +20,8 @@ public class Minimax implements Player {
 
     private String name;
     private Color color;
-    private Position[] goalPositions;
-    final private int DEPTH = 3;
+    private Position[] goalPositions, basePositions;
+    final private int DEPTH = 4;
     private Tree gameTree;
     private static int index = 0;
 
@@ -192,5 +192,13 @@ public class Minimax implements Player {
             }
             return n;
         }
+    }
+
+    public void setBase(Position[] base) {
+        basePositions = base;
+    }
+
+    public Position[] getBase() {
+        return basePositions;
     }
 }

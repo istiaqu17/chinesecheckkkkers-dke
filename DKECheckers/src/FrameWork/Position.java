@@ -84,6 +84,16 @@ public class Position {
         }
     }
 
+    public int distanceToCenter(Position base0, Position goal0){
+        int distance = 25;
+        int dI = (goal0.i - base0.i) / 8;
+        int dJ = (goal0.j - base0.j) / 8;
+        for (int k = 0; k < 10; k++){
+            distance = Math.min(distance, this.distanceTo(new Position(0, 0, base0.i + (k * dI), base0.j + (k * dJ), null)));
+        }
+        return distance;
+    }
+
     public Position copy() {
         Piece piece;
         if (this.getPiece() == null){

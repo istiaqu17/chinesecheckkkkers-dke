@@ -41,10 +41,17 @@ public class Board extends JPanel {
         this.players = players;
         createBoard();
         createTurnPanel(players[0]);
+        for (int i = 0; i < positions.length; i++) {
+            for (int j = 0; j < positions[i].length; j++) {
+                if (positions[i][j] != null) {
+                    System.out.println("Distance to center of " + i + " " + j + " is " + positions[i][j].distanceToCenter(players[0].getBase()[0], players[0].getGoal()[0]));
+                }
+            }
+        }
         nextTurn();
     }
 
-    public Board(Player[] players, Position[][] positions){
+    public Board(Player[] players, Position[][] positions) {
         this.players = players;
         this.setPositions(positions);
     }
@@ -56,6 +63,7 @@ public class Board extends JPanel {
         for (int i = 0; i < playerBases[x].length; i++) {
             playerBases[x][i].addPiece(new Piece(colors[x]));
         }
+        player.setBase(playerBases[x % 6]);
         player.setGoal(playerBases[(x + 3) % 6]);
         player.setColor(colors[x]);
     }

@@ -19,7 +19,7 @@ public class RandomAIPlayer implements Player {
 
     private String name;
     private Color color;
-    private Position[] goalPositions;
+    private Position[] goalPositions, basePositions;
 
     public RandomAIPlayer() {
     }
@@ -89,5 +89,13 @@ public class RandomAIPlayer implements Player {
             newGoalPositions[i] = this.getGoal()[i].copy();
         }
         return new RandomAIPlayer(this.getName(), this.getColor(), newGoalPositions);
+    }
+
+    public void setBase(Position[] base) {
+        basePositions = base;
+    }
+
+    public Position[] getBase() {
+        return basePositions;
     }
 }

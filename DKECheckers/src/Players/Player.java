@@ -28,6 +28,9 @@ public interface Player
 	void setName(String aName);
 	String getName();
 
+        void setBase(Position[] base);
+        Position[] getBase();
+
         void setGoal(Position[] goal);
         Position[] getGoal();
 
