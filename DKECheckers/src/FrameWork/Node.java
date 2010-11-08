@@ -86,8 +86,15 @@ public class Node {
 
     public void printNode(){
         System.out.println("Depth: " + this.getDepth() + ", value: " + this.getValue() + ", children: " + this.getChildren().size());
+        int i = 0;
         for (Node child: this.children){
+            i++;
+            System.out.print(i + " ");
             child.printNode();
         }
+    }
+
+    public void setChildren(ArrayList<Node> children) {
+        this.children = children;
     }
 }

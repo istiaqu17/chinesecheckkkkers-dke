@@ -21,9 +21,9 @@ public class Minimax implements Player {
     private String name;
     private Color color;
     private Position[] goalPositions;
-    final private int DEPTH = 2;
+    final private int DEPTH = 3;
     private Tree gameTree;
-    private int index = 0;
+    private static int index = 0;
 
     public Minimax() {
     }
@@ -66,34 +66,35 @@ public class Minimax implements Player {
         gameTree = new Tree(b);
         gameTree.setRoot(new Node(b));
         gameTree.setRoot(expandNode(gameTree.getRoot()));
-        gameTree.printTree();
+//        gameTree.printTree();
         return getMove();
     }
 
     public Node expandNode(Node node) {
-//        System.out.println("Node is at depth " + node.getDepth());
         ArrayList<Move> moves = new ArrayList<Move>();
-
         Player player = node.getGameState().getPlayers()[node.getGameState().getTurn()];
         for (Position position : node.getGameState().findPieces(player.getColor())) {
             moves.addAll(node.getGameState().determineValidMoves(position));
         }
-//        System.out.println("There are " + moves.size());
         for (Move move : moves) {
-//            System.out.println("Move " + counter + " depth: " + node.getDepth());
             Node child = new Node(node.getGameState().simulateMove(move), node, move);
             node.addChild(child);
             if (child.getDepth() < DEPTH && child.getGameState().getWinner() == null) {
-                System.out.println("expanding depth: " + node.getDepth());
                 child = expandNode(child);
-                if (player.getColor() == color) {
-                    node.setValue(Math.max(node.getValue(), child.getValue()));
-                } else {
-                    node.setValue(Math.min(node.getValue(), child.getValue()));
-                }
             } else {
                 child.setValue(evaluate(child));
             }
+        }
+        node.setValue(node.getChildren().get(0).getValue());
+        for (Node child : node.getChildren()) {
+            if (player.getColor() == color) {
+                node.setValue(Math.max(node.getValue(), child.getValue()));
+            } else {
+                node.setValue(Math.min(node.getValue(), child.getValue()));
+            }
+        }
+        if (node.getDepth() > 1){
+            node.setChildren(null);
         }
         return node;
     }
@@ -145,19 +146,20 @@ public class Minimax implements Player {
         return value;
     }
 
-    public Move getMove(){
+    public Move getMove() {
         Node node = null;
-        for (Node child : gameTree.getRoot().getChildren()){
-            if (node == null){
+        for (Node child : gameTree.getRoot().getChildren()) {
+            if (node == null) {
                 node = child;
-            } else if (child.getValue() > node.getValue()){
+            } else if (child.getValue() > node.getValue()) {
                 node = child;
             }
         }
-        System.out.println("-------------------------------Moved");
+        System.out.println("------------------------------- Moved from " + node.getMove().getPositions()[0].getI() + " " + node.getMove().getPositions()[0].getJ() + " to " +
+                node.getMove().getPositions()[node.getMove().getPositions().length - 1].getI() + " " + node.getMove().getPositions()[node.getMove().getPositions().length - 1].getJ());
         return node.getMove();
     }
-    
+
     public Node getMinimaxNode(Node n) {
         Player[] players = n.getGameState().getPlayers();
         int turn = n.getGameState().getTurn();

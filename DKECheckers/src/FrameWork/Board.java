@@ -44,6 +44,11 @@ public class Board extends JPanel {
         nextTurn();
     }
 
+    public Board(Player[] players, Position[][] positions){
+        this.players = players;
+        this.setPositions(positions);
+    }
+
     /*
      * Resets the starting base of a player by placing all 10 pieces in the starting triangle
      */
@@ -402,7 +407,7 @@ public class Board extends JPanel {
      * Moves a piece towards the destination
      */
     private void advanceMovingPiece() {
-        int speed = 15;
+        int speed = 50;
         // Direction in which a piece has to move
         double dX = movingPiecePositions[1].getX() - movingPiecePositions[0].getX();
         double dY = movingPiecePositions[1].getY() - movingPiecePositions[0].getY();
@@ -430,9 +435,6 @@ public class Board extends JPanel {
                 movePiece(new Move(movingPiecePositions));
             } else {
                 nextTurn();
-                if (players[turn].isHuman()) {
-                    allowMouseInput = true;
-                }
             }
         }
         repaint();
@@ -490,7 +492,6 @@ public class Board extends JPanel {
                 setPlayerBase(4, players[4]);
                 setPlayerBase(5, players[5]);
                 break;
-
         }
     }
 
@@ -532,6 +533,7 @@ public class Board extends JPanel {
         turnPanel.setFocusable(false);
         turnPanel.setBounds(400, 10, 120, 60);
         add(turnPanel);
+        repaint();
     }
 
     //this makes an array with all positions currently occupied by the pieces of this player
@@ -592,7 +594,7 @@ public class Board extends JPanel {
         }
         for (int i = 0; i < b.players.length; i++) {
             if (b.players[i].getColor() == move.getPositions()[0].getPiece().getColor()) {
-                b.turn = i;
+                b.turn = (i + 1) % b.players.length;
             }
         }
         return b;
@@ -604,8 +606,7 @@ public class Board extends JPanel {
         for (int i = 0; i < players.length; i++) {
             newPlayers[i] = players[i].copy();
         }
-        Board board = new Board(0, newPlayers);
-        board.setPositions(positions);
+        Board board = new Board(newPlayers, positions);
         return board;
     }
 
