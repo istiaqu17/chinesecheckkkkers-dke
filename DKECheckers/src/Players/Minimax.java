@@ -1,5 +1,7 @@
 package Players;
 
+
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -21,9 +23,8 @@ public class Minimax implements Player {
     private String name;
     private Color color;
     private Position[] goalPositions, basePositions;
-    final private int DEPTH = 4;
+    final private int DEPTH = 3;
     private Tree gameTree;
-    private static int index = 0;
 
     public Minimax() {
     }
@@ -66,7 +67,7 @@ public class Minimax implements Player {
         gameTree = new Tree(b);
         gameTree.setRoot(new Node(b));
         gameTree.setRoot(expandNode(gameTree.getRoot()));
-//        gameTree.printTree();
+        gameTree.printTree();
         return getMove();
     }
 
@@ -77,26 +78,53 @@ public class Minimax implements Player {
             moves.addAll(node.getGameState().determineValidMoves(position));
         }
         for (Move move : moves) {
+            if(node.getParent() != null){
+                System.out.println("This alpha: " + node.getAlpha() + ", this beta: " + node.getBeta() + ", parents alpha: " + node.getParent().getAlpha() + ", parents beta: " + node.getParent().getBeta());
+                if(node.getAlpha() >= node.getParent().getBeta() || node.getBeta() <= node.getParent().getAlpha())
+                    break;
+            }
+
             Node child = new Node(node.getGameState().simulateMove(move), node, move);
             node.addChild(child);
             if (child.getDepth() < DEPTH && child.getGameState().getWinner() == null) {
                 child = expandNode(child);
             } else {
-                child.setValue(evaluate(child));
+                int childValue = evaluate(child);
+                child.setValue(childValue);
+                setAlphaOrBeta(child.getGameState().getPlayers()[child.getGameState().getTurn()], childValue, child);
             }
         }
-        node.setValue(node.getChildren().get(0).getValue());
+        int firstChildValue = node.getChildren().get(0).getValue();
+        node.setValue(firstChildValue);
+        setAlphaOrBeta(player, firstChildValue, node);
+        
         for (Node child : node.getChildren()) {
             if (player.getColor() == color) {
-                node.setValue(Math.max(node.getValue(), child.getValue()));
+                int max = Math.max(node.getValue(), child.getValue());
+                node.setValue(max);
+                setAlphaOrBeta(player, max, node);
             } else {
-                node.setValue(Math.min(node.getValue(), child.getValue()));
+                int min = Math.min(node.getValue(), child.getValue());
+                node.setValue(min);
+                setAlphaOrBeta(player, min, node);
             }
         }
-        if (node.getDepth() > 1){
-            node.setChildren(null);
-        }
+//        if (node.getDepth() > 1){
+//            node.setChildren(null);
+//        }
         return node;
+    }
+
+    public void setAlphaOrBeta(Player turn, int value, Node node){
+        if (node.getParent() != null){
+            if(turn.getColor() == color){
+                if(value < node.getParent().getBeta())
+                    node.getParent().setBeta(value);
+            } else {
+                if(value > node.getParent().getAlpha())
+                    node.getParent().setAlpha(value);
+            }
+        }
     }
 
     public Player copy() {

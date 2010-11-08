@@ -19,6 +19,8 @@ public class Node {
     private Board gameState;
     private int value = 0;
     private Move move;
+    private int alpha = -1000000000;
+    private int beta = 1000000000;
 
     public Node(Board b){
         gameState = b;
@@ -54,8 +56,10 @@ public class Node {
         return parent == null;
     }
     
-    public void setValue(int aValue){
-    	value = aValue;
+    public void setValue(int v){
+    	value = v;
+        alpha = v;
+        beta = v;
     }
     
     public int getValue(){
@@ -96,5 +100,21 @@ public class Node {
 
     public void setChildren(ArrayList<Node> children) {
         this.children = children;
+    }
+
+    public int getAlpha(){
+        return alpha;
+    }
+
+    public void setAlpha(int a){
+        alpha = a;
+    }
+
+    public int getBeta(){
+        return beta;
+    }
+
+    public void setBeta(int b){
+        beta = b;
     }
 }
