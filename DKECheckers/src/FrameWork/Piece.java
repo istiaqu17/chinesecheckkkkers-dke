@@ -19,10 +19,9 @@ public class Piece {
     }
 
     public Piece copy() {
-        if (this == null) {
+        if (this == null){
             return null;
-        } else {
-            return new Piece(this.getColor());
         }
+        return new Piece(this.getColor());
     }
 }

@@ -1,7 +1,5 @@
 package FrameWork;
 
-
-
 import Players.Player;
 import java.awt.*;
 import java.awt.event.*;
@@ -318,8 +316,8 @@ public class Board extends JPanel {
 
     // Checks if a move is valid
     public boolean isValidMove(Move move) {
-        for (int i = 1; i < move.getPositions().length; i++){
-            if (!(move.getPositions()[i] != null && move.getPositions()[i].getPiece() == null)){
+        for (int i = 1; i < move.getPositions().length; i++) {
+            if (!(move.getPositions()[i] != null && move.getPositions()[i].getPiece() == null)) {
                 return false;
             }
         }
@@ -500,7 +498,7 @@ public class Board extends JPanel {
      * Sets the turn to the next player
      */
     private void nextTurn() {
-        if (!checkForWinner()) {
+        if (getWinner() == null) {
             turn = (turn + 1) % players.length;
             createTurnPanel(players[turn]);
             allowPieceSelection = true;
@@ -522,7 +520,7 @@ public class Board extends JPanel {
      * Shows who's turn it is
      */
     private void createTurnPanel(Player player) {
-        if (turnPanel != null){
+        if (turnPanel != null) {
             remove(turnPanel);
         }
         turnPanel = new JPanel();
@@ -566,21 +564,6 @@ public class Board extends JPanel {
         return opponentsPositions;
     }
 
-    private boolean checkForWinner() {
-        if (turn < 0) {
-            return false;
-        }
-        boolean winner = true;
-        int goalPieces = 10;
-        for (Position goalPosition : players[turn].getGoal()) {
-            if (goalPosition.getPiece() == null || goalPosition.getPiece().getColor() != players[turn].getColor()) {
-                winner = false;
-                goalPieces--;
-            }
-        }
-        return winner;
-    }
-
     public Player getWinner() {
         for (Player p : players) {
             boolean winner = true;
@@ -607,9 +590,9 @@ public class Board extends JPanel {
             Position p1 = b.positions[move.getPositions()[move.getPositions().length - 1].getI()][move.getPositions()[move.getPositions().length - 1].getJ()];
             p1.addPiece(piece);
         }
-        for (int i = 0; i < players.length; i++){
-            if (players[i].getColor() == move.getPositions()[0].getPiece().getColor()){
-                turn = i;
+        for (int i = 0; i < b.players.length; i++) {
+            if (b.players[i].getColor() == move.getPositions()[0].getPiece().getColor()) {
+                b.turn = i;
             }
         }
         return b;
@@ -618,27 +601,31 @@ public class Board extends JPanel {
     // makes a copy of the board, it's players and the position with their corresponding pieces if any
     public Board copy() {
         Player[] newPlayers = new Player[players.length];
-        for (int i = 0; i < players.length; i++){
+        for (int i = 0; i < players.length; i++) {
             newPlayers[i] = players[i].copy();
         }
-        Position[][] newPositions = new Position[positions.length][positions[0].length];
-        Board board = new Board(this.turn, newPlayers);
+        Board board = new Board(0, newPlayers);
         board.setPositions(positions);
         return board;
     }
-    public void setPositions(Position[][] positions){
-        for (int i = 0; i < positions.length; i++){
-            for (int j = 0; j < positions[i].length; j++){
-                this.positions[i][j] = positions[i][j].copy();
+
+    public void setPositions(Position[][] positions) {
+        for (int i = 0; i < positions.length; i++) {
+            for (int j = 0; j < positions[i].length; j++) {
+                if (positions[i][j] != null) {
+                    this.positions[i][j] = positions[i][j].copy();
+                } else {
+                    this.positions[i][j] = null;
+                }
             }
         }
     }
 
-    public Player[] getPlayers(){
+    public Player[] getPlayers() {
         return players;
     }
 
-    public int getTurn(){
+    public int getTurn() {
         return turn;
     }
 }

@@ -85,14 +85,12 @@ public class Position {
     }
 
     public Position copy() {
+        Piece piece;
         if (this.getPiece() == null){
-            System.out.println("bah");
+            piece = null;
+        } else {
+            piece = this.getPiece().copy();
         }
-        return new Position(
-                this.getX(),
-                this.getY(),
-                this.getI(),
-                this.getJ(),
-                this.getPiece().copy());
+        return new Position(this.getX(), this.getY(), this.getI(), this.getJ(), piece);
     }
 }

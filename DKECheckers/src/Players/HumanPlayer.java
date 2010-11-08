@@ -62,9 +62,7 @@ public class HumanPlayer implements Player {
     public Player copy() {
         Position[] newGoalPositions = new Position[this.getGoal().length];
         for (int i = 0; i < goalPositions.length; i++) {
-            if (goalPositions[i] != null) {
-                newGoalPositions[i] = goalPositions[i].copy();
-            }
+            newGoalPositions[i] = goalPositions[i].copy();
         }
         return new HumanPlayer(this.getName(), this.getColor(), newGoalPositions);
     }
