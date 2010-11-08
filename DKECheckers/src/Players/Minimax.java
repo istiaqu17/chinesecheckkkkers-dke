@@ -65,14 +65,13 @@ public class Minimax implements Player {
     public Move makeMove(Board b) {
         gameTree = new Tree(b);
         gameTree.setRoot(new Node(b));
-        System.out.println("Root is at depth " + gameTree.getRoot().getDepth());
         gameTree.setRoot(expandNode(gameTree.getRoot()));
-        System.out.println(index + " nodes created");
+        gameTree.printTree();
         return getMove();
     }
 
     public Node expandNode(Node node) {
-        System.out.println("Node is at depth " + node.getDepth());
+//        System.out.println("Node is at depth " + node.getDepth());
         ArrayList<Move> moves = new ArrayList<Move>();
 
         Player player = node.getGameState().getPlayers()[node.getGameState().getTurn()];
@@ -84,8 +83,7 @@ public class Minimax implements Player {
 //            System.out.println("Move " + counter + " depth: " + node.getDepth());
             Node child = new Node(node.getGameState().simulateMove(move), node, move);
             node.addChild(child);
-            index++;
-            if (node.getDepth() < DEPTH && node.getGameState().getWinner() == null) {
+            if (child.getDepth() < DEPTH && child.getGameState().getWinner() == null) {
                 System.out.println("expanding depth: " + node.getDepth());
                 child = expandNode(child);
                 if (player.getColor() == color) {
@@ -94,7 +92,7 @@ public class Minimax implements Player {
                     node.setValue(Math.min(node.getValue(), child.getValue()));
                 }
             } else {
-                node.setValue(evaluate(node));
+                child.setValue(evaluate(child));
             }
         }
         return node;

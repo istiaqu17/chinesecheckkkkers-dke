@@ -402,7 +402,7 @@ public class Board extends JPanel {
      * Moves a piece towards the destination
      */
     private void advanceMovingPiece() {
-        int speed = 50;
+        int speed = 15;
         // Direction in which a piece has to move
         double dX = movingPiecePositions[1].getX() - movingPiecePositions[0].getX();
         double dY = movingPiecePositions[1].getY() - movingPiecePositions[0].getY();

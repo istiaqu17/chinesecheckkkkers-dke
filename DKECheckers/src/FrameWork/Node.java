@@ -75,4 +75,19 @@ public class Node {
         }
         return depth;
     }
+
+    public int calculateSize(){
+        int size = this.children.size();
+        for (Node child: this.getChildren()){
+            size += child.calculateSize();
+        }
+        return size;
+    }
+
+    public void printNode(){
+        System.out.println("Depth: " + this.getDepth() + ", value: " + this.getValue() + ", children: " + this.getChildren().size());
+        for (Node child: this.children){
+            child.printNode();
+        }
+    }
 }
