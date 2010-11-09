@@ -7,6 +7,7 @@ package FrameWork;
 
 
 
+import Players.Player;
 import java.util.ArrayList;
 
 /**
@@ -116,5 +117,17 @@ public class Node {
 
     public void setBeta(int b){
         beta = b;
+    }
+
+    public void setAlphaOrBeta(Player turn, int value, Player minimax){
+        if (parent != null){
+            if(turn.getColor() == minimax.getColor()){
+                if(value < parent.getBeta())
+                    parent.setBeta(value);
+            } else {
+                if(value > parent.getAlpha())
+                    parent.setAlpha(value);
+            }
+        }
     }
 }
