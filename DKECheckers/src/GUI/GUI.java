@@ -5,12 +5,15 @@
  */
 package GUI;
 
+import Evaluator.Evaluator1;
 import FrameWork.Board;
 import Players.BruteForceAI;
 import Players.HumanPlayer;
-import Players.Minimax;
+import Players.MiniMaxAlphaBeta;
 import Players.Player;
 import Players.RandomAIPlayer;
+import Players.MiniMax;
+import Players.MiniMaxAlphaBeta2;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,7 +31,7 @@ import javax.swing.JTextField;
  */
 public class GUI extends javax.swing.JFrame {
 
-    private String[] typeOfPlayers = new String[]{"Human Player", "Random AI", "Brute Force", "MiniMax"};
+    private String[] typeOfPlayers = new String[]{"Human Player", "Random AI", "Brute Force", "MiniMax", "MiniMaxAlphaBeta", "MiniMaxAlphaBeta2"};
     private JPanel board, newGamePanel, playerOptionPanel;
     private int selectedNumberOfPlayers = -1;
     private JComboBox[] playerOptions;
@@ -136,7 +139,29 @@ public class GUI extends javax.swing.JFrame {
                             players[i].setName(name);
                             break;
                         case 3:
-                            players[i] = new Minimax();
+                            MiniMax miniMax = new MiniMax();
+                            players[i] = miniMax;
+                            miniMax.setEvaluator(new Evaluator1());
+                            name = playerNames[i].getText();
+                            if (name.equalsIgnoreCase("")) {
+                                name = "Player " + (i + 1);
+                            }
+                            players[i].setName(name);
+                            break;
+                        case 4:
+                            MiniMaxAlphaBeta miniMaxAlphaBeta = new MiniMaxAlphaBeta();
+                            players[i] = miniMaxAlphaBeta;
+                            miniMaxAlphaBeta.setEvaluator(new Evaluator1());
+                            name = playerNames[i].getText();
+                            if (name.equalsIgnoreCase("")) {
+                                name = "Player " + (i + 1);
+                            }
+                            players[i].setName(name);
+                            break;
+                        case 5:
+                            MiniMaxAlphaBeta2 miniMaxAlphaBeta2 = new MiniMaxAlphaBeta2();
+                            players[i] = miniMaxAlphaBeta2;
+                            miniMaxAlphaBeta2.setEvaluator(new Evaluator1());
                             name = playerNames[i].getText();
                             if (name.equalsIgnoreCase("")) {
                                 name = "Player " + (i + 1);

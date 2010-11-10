@@ -41,13 +41,6 @@ public class Board extends JPanel {
         this.players = players;
         createBoard();
         createTurnPanel(players[0]);
-        for (int i = 0; i < positions.length; i++) {
-            for (int j = 0; j < positions[i].length; j++) {
-                if (positions[i][j] != null) {
-                    System.out.println("Distance to center of " + i + " " + j + " is " + positions[i][j].distanceToCenter(players[0].getBase()[0], players[0].getGoal()[0]));
-                }
-            }
-        }
         nextTurn();
     }
 
@@ -426,8 +419,8 @@ public class Board extends JPanel {
         // If the number op steps taken is equal to the speed, the piece is on the new position
         if (moveRepeats == speed) {
             moveRepeats = 0;
-            timer.stop();
             resetMovingPiece();
+            timer.stop();
             // Checks if there are more positions to which the piece has to be moved in case the piece could hop over another
             if (movingPiecePositions.length > 2) {
                 // Copies the positions
@@ -541,7 +534,6 @@ public class Board extends JPanel {
         turnPanel.setFocusable(false);
         turnPanel.setBounds(400, 10, 120, 60);
         add(turnPanel);
-        repaint();
     }
 
     //this makes an array with all positions currently occupied by the pieces of this player
@@ -600,11 +592,7 @@ public class Board extends JPanel {
             Position p1 = b.positions[move.getPositions()[move.getPositions().length - 1].getI()][move.getPositions()[move.getPositions().length - 1].getJ()];
             p1.addPiece(piece);
         }
-        for (int i = 0; i < b.players.length; i++) {
-            if (b.players[i].getColor() == move.getPositions()[0].getPiece().getColor()) {
-                b.turn = (i + 1) % b.players.length;
-            }
-        }
+        b.turn = (this.turn + 1) % this.players.length;
         return b;
     }
 

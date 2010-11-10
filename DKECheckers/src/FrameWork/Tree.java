@@ -21,12 +21,12 @@ public class Tree {
         this.root = root;
     }
 
-    public int calculateSize(){
-        return root.calculateSize();
+    public void calculateSize(){
+        System.out.println("+++++++++++++++++++ Tree size: " + root.calculateSize());
     }
 
     public void printTree(){
         root.printNode();
-        System.out.println("+++++++++++++++++++ Tree size: " + calculateSize());
+        calculateSize();
     }
 }
