@@ -23,7 +23,7 @@ public class Minimax implements Player {
     private String name;
     private Color color;
     private Position[] goalPositions, basePositions;
-    final private int DEPTH = 3;
+    final private int DEPTH = 4;
     private Tree gameTree;
 
     public Minimax() {
@@ -98,21 +98,15 @@ public class Minimax implements Player {
         }
         int firstChildValue = node.getChildren().get(0).getValue();
         node.setValue(firstChildValue);
-        node.setAlphaOrBeta(player, firstChildValue, this);
         
         for (Node child : node.getChildren()) {
             if (player.getColor() == color) {
-                int max = Math.max(node.getValue(), child.getValue());
-                node.setValue(max);
-                if(node.getParent() != null)
-                    node.getParent().setBeta(max);
+                node.setValue(Math.max(node.getValue(), child.getValue()));
             } else {
-                int min = Math.min(node.getValue(), child.getValue());
-                node.setValue(min);
-                if(node.getParent() != null)
-                    node.getParent().setAlpha(min);
+                node.setValue(Math.min(node.getValue(), child.getValue()));
             }
         }
+        node.setAlphaOrBeta(player, node.getValue(), this);
 //        if (node.getDepth() > 1){
 //            node.setChildren(null);
 //        }
