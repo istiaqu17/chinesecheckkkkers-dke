@@ -5,21 +5,26 @@
  */
 package GUI;
 
+import Evaluator.Evaluator;
 import Evaluator.Evaluator1;
+import Filters.Filter;
+import Filters.backwardsFilter;
 import FrameWork.Board;
 import Players.BruteForceAI;
 import Players.HumanPlayer;
+import Players.Minimax;
 import Players.MiniMaxAlphaBeta;
 import Players.Player;
 import Players.RandomAIPlayer;
-import Players.MiniMax;
 import Players.MiniMaxAlphaBeta2;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -32,11 +37,17 @@ import javax.swing.JTextField;
 public class GUI extends javax.swing.JFrame {
 
     private String[] typeOfPlayers = new String[]{"Human Player", "Random AI", "Brute Force", "MiniMax", "MiniMaxAlphaBeta", "MiniMaxAlphaBeta2"};
+    private String[] typeOfEvaluators = new String[]{"Evaluator 1"};
+    private String[] typeOfFilters = new String[]{"Backwards Filter"};
     private JPanel board, newGamePanel, playerOptionPanel;
     private int selectedNumberOfPlayers = -1;
     private JComboBox[] playerOptions;
     private JTextField[] playerNames;
-    private int framewidth = 800;
+    private int framewidth = 700;
+    private JDialog optionDialog;
+    private Evaluator evaluator;
+    private Filter[] filters;
+    private int depth = 0;
 
     /** Creates new form GUI */
     public GUI() {
@@ -86,7 +97,7 @@ public class GUI extends javax.swing.JFrame {
         int numberOfPlayers = Integer.parseInt(numberOfPlayersString);
         selectedNumberOfPlayers = numberOfPlayers;
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(numberOfPlayers + 1, 3, 5, 5));
+        panel.setLayout(new GridLayout(numberOfPlayers + 1, 3, 0, 0));
         playerOptions = new JComboBox[numberOfPlayers];
         playerNames = new JTextField[numberOfPlayers];
         for (int i = 0; i < numberOfPlayers; i++) {
@@ -96,10 +107,10 @@ public class GUI extends javax.swing.JFrame {
             playerNames[i] = new JTextField("Player " + (i + 1), 15);
             panel.add(playerNames[i]);
         }
-        panel.setBounds(10, newGamePanel.getHeight() + newGamePanel.getY(), 600, numberOfPlayers * 40);
         playerOptionPanel = panel;
         panel.add(new JLabel());
         panel.add(createNewGameButton());
+        panel.setBounds(10, newGamePanel.getHeight() + newGamePanel.getY(), 600, (numberOfPlayers + 1) * 30);
         add(playerOptionPanel);
     }
 
@@ -139,7 +150,7 @@ public class GUI extends javax.swing.JFrame {
                             players[i].setName(name);
                             break;
                         case 3:
-                            MiniMax miniMax = new MiniMax();
+                            Minimax miniMax = new Minimax();
                             players[i] = miniMax;
                             miniMax.setEvaluator(new Evaluator1());
                             name = playerNames[i].getText();
@@ -159,9 +170,14 @@ public class GUI extends javax.swing.JFrame {
                             players[i].setName(name);
                             break;
                         case 5:
+                            createOptionPanel(i, 5);
                             MiniMaxAlphaBeta2 miniMaxAlphaBeta2 = new MiniMaxAlphaBeta2();
                             players[i] = miniMaxAlphaBeta2;
-                            miniMaxAlphaBeta2.setEvaluator(new Evaluator1());
+                            miniMaxAlphaBeta2.setEvaluator(evaluator);
+                            if (filters[0] != null) {
+                                miniMaxAlphaBeta2.setFilters(filters);
+                            }
+                            miniMaxAlphaBeta2.setDepth(depth);
                             name = playerNames[i].getText();
                             if (name.equalsIgnoreCase("")) {
                                 name = "Player " + (i + 1);
@@ -177,6 +193,63 @@ public class GUI extends javax.swing.JFrame {
         }
         button.addActionListener(new newGameButtonListener());
         return button;
+    }
+
+    private void createOptionPanel(int i, int typeOfPlayer) {
+        optionDialog = new JDialog(this, "Player " + (i + 1) + ": " + typeOfPlayers[typeOfPlayer], true);
+        optionDialog.setLayout(new GridLayout(typeOfFilters.length + 6, 1));
+        optionDialog.setBounds(this.getX() + 20, this.getY() + 20, 250, 200 + (typeOfFilters.length * 30));
+        final JComboBox evaluators = new JComboBox(typeOfEvaluators);
+        optionDialog.add(new JLabel("Evaluation function:"));
+        optionDialog.add(evaluators);
+        final JCheckBox[] filterBoxes = new JCheckBox[typeOfFilters.length];
+        optionDialog.add(new JLabel("Filters:"));
+        for (int j = 0; j < filterBoxes.length; j++) {
+            filterBoxes[j] = new JCheckBox(typeOfFilters[j], false);
+            optionDialog.add(filterBoxes[j]);
+        }
+        optionDialog.add(new JLabel("Depth:"));
+        final JTextField depthField = new JTextField("3", 2);
+        optionDialog.add(depthField);
+        JButton doneButton = new JButton("Done");
+        doneButton.setBounds(10, 10, 25, 25);
+        class doneListener implements ActionListener {
+
+            public void actionPerformed(ActionEvent e) {
+
+                switch (evaluators.getSelectedIndex()) {
+                    case 0:
+                        evaluator = new Evaluator1();
+                        break;
+                    // more evaluators
+                }
+                int boxesSelected = 0;
+                for (int i = 0; i < filterBoxes.length; i++) {
+                    boxesSelected++;
+                }
+                filters = new Filter[boxesSelected];
+                for (int i = 0; i < filterBoxes.length; i++) {
+                    if (filterBoxes[i].isSelected()) {
+                        switch (i) {
+                            case 0:
+                                filters[i] = new backwardsFilter();
+                                break;
+                            // more filters
+                        }
+                    }
+                }
+                try {
+                    depth = Integer.parseInt(depthField.getText());
+                } catch (NumberFormatException ex){
+                    System.out.println("bah");
+                    depth = 3;
+                }
+                optionDialog.dispose();
+            }
+        }
+        doneButton.addActionListener(new doneListener());
+        optionDialog.add(doneButton);
+        optionDialog.setVisible(true);
     }
 
     /** This method is called from within the constructor to

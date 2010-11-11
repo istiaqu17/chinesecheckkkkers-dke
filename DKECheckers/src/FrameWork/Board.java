@@ -32,6 +32,7 @@ public class Board extends JPanel {
     private ArrayList<Move> validMoves = new ArrayList<Move>();
     private Player[] players;
     private JPanel turnPanel;
+    private int turnSwitches = 0;
 
     /*
      * Constructor
@@ -229,7 +230,9 @@ public class Board extends JPanel {
             if (i + positionsToCheck[k][0] >= 0 && i + positionsToCheck[k][0] <= 16 && j + positionsToCheck[k][1] >= 0 && j + positionsToCheck[k][1] <= 16) {
                 // Checks for valid moves of 1 position
                 if (positions[i + positionsToCheck[k][0]][j + positionsToCheck[k][1]] != null && positions[i + positionsToCheck[k][0]][j + positionsToCheck[k][1]].getPiece() == null) {
-                    validMoves.add(new Move(new Position[]{position, positions[i + positionsToCheck[k][0]][j + positionsToCheck[k][1]]}));
+                    Move validMove = new Move(new Position[]{position, positions[i + positionsToCheck[k][0]][j + positionsToCheck[k][1]]});
+                    validMoves.add(validMove);
+                    positionsChecked.add(validMove.getPositions()[validMove.getPositions().length - 1]);
                 }
             }
             if ((i + (2 * positionsToCheck[k][0])) >= 0 && i + (2 * positionsToCheck[k][0]) <= 16 && j + (2 * positionsToCheck[k][1]) >= 0 && j + (2 * positionsToCheck[k][1]) <= 16) {
@@ -287,10 +290,10 @@ public class Board extends JPanel {
             if ((i + (2 * positionsToCheck[k][0])) >= 0 && i + (2 * positionsToCheck[k][0]) <= 16 && j + (2 * positionsToCheck[k][1]) >= 0 && j + (2 * positionsToCheck[k][1]) <= 16) {
                 // Checks for hops
                 Position positionToCheck = positions[i + (2 * positionsToCheck[k][0])][j + (2 * positionsToCheck[k][1])];
+
                 if (positions[i + (2 * positionsToCheck[k][0])][j + (2 * positionsToCheck[k][1])] != null
                         && positions[i + positionsToCheck[k][0]][j + positionsToCheck[k][1]].getPiece() != null
                         && positions[i + (2 * positionsToCheck[k][0])][j + (2 * positionsToCheck[k][1])].getPiece() == null) {
-
                     // Checks if the position found, has already been found or not, only add the position to the list if it hasn't been found already
                     int[] validMoveCoordinates = new int[]{positionToCheck.getI(), positionToCheck.getJ()};
                     boolean positionAlreadyFound = false;
@@ -500,6 +503,7 @@ public class Board extends JPanel {
      * Sets the turn to the next player
      */
     private void nextTurn() {
+        turnSwitches++;
         if (getWinner() == null) {
             turn = (turn + 1) % players.length;
             createTurnPanel(players[turn]);
@@ -511,7 +515,7 @@ public class Board extends JPanel {
             }
         } else {
             JOptionPane.showMessageDialog(this,
-                    "Player " + players[turn].getName() + " is the winner",
+                    players[turn].getName() + " is the winner using " + ((turnSwitches + 1) / players.length) + " turns",
                     "We have a winner",
                     JOptionPane.PLAIN_MESSAGE);
             allowMouseInput = false;
