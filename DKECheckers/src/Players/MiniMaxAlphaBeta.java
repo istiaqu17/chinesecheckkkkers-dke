@@ -10,6 +10,7 @@ import FrameWork.Move;
 import FrameWork.Node;
 import FrameWork.Position;
 import FrameWork.Tree;
+import Sorting.MoveSorter;
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -25,6 +26,7 @@ public class MiniMaxAlphaBeta implements Player {
     final private int DEPTH = 3;
     private Tree gameTree;
     private Evaluator evaluator;
+//    private int index = 0;        //for testing the MoveSorter
 
     public MiniMaxAlphaBeta() {
     }
@@ -77,9 +79,14 @@ public class MiniMaxAlphaBeta implements Player {
         for (Position position : node.getGameState().findPieces(player.getColor())) {
             moves.addAll(node.getGameState().determineValidMoves(position));
         }
+        moves = MoveSorter.sortMovesOnHops(moves);
+//        //for testing the MoveSorter
+//        for(Move move: moves){
+//            System.out.println(index + " sorted: " + move.getPositions().length);
+//        }
+//        index++;
         for (Move move : moves) {
             if (node.getParent() != null) {
-
                 if (node.getAlpha() >= node.getParent().getBeta() || node.getBeta() <= node.getParent().getAlpha()) {
                     break;
                 }
