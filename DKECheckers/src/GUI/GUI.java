@@ -9,6 +9,7 @@ import Evaluator.Evaluator;
 import Evaluator.Evaluator1;
 import Filters.Filter;
 import Filters.backwardsFilter;
+import Filters.moveSorter;
 import FrameWork.Board;
 import Players.BruteForceAI;
 import Players.HumanPlayer;
@@ -38,7 +39,7 @@ public class GUI extends javax.swing.JFrame {
 
     private String[] typeOfPlayers = new String[]{"Human Player", "Random AI", "Brute Force", "MiniMax", "MiniMaxAlphaBeta", "MiniMaxAlphaBeta2"};
     private String[] typeOfEvaluators = new String[]{"Evaluator 1"};
-    private String[] typeOfFilters = new String[]{"Backwards Filter"};
+    private String[] typeOfFilters = new String[]{"Backwards Filter", "Move Sorter"};
     private JPanel board, newGamePanel, playerOptionPanel;
     private int selectedNumberOfPlayers = -1;
     private JComboBox[] playerOptions;
@@ -160,8 +161,14 @@ public class GUI extends javax.swing.JFrame {
                             players[i].setName(name);
                             break;
                         case 4:
+                            createOptionPanel(i, 4);
                             MiniMaxAlphaBeta miniMaxAlphaBeta = new MiniMaxAlphaBeta();
                             players[i] = miniMaxAlphaBeta;
+                            miniMaxAlphaBeta.setEvaluator(evaluator);
+                            if (filters[0] != null) {
+                                miniMaxAlphaBeta.setFilters(filters);
+                            }
+                            miniMaxAlphaBeta.setDepth(depth);
                             miniMaxAlphaBeta.setEvaluator(new Evaluator1());
                             name = playerNames[i].getText();
                             if (name.equalsIgnoreCase("")) {
@@ -233,6 +240,9 @@ public class GUI extends javax.swing.JFrame {
                         switch (i) {
                             case 0:
                                 filters[i] = new backwardsFilter();
+                                break;
+                            case 1:
+                                filters[i] = new moveSorter();
                                 break;
                             // more filters
                         }
