@@ -7,7 +7,6 @@ package FrameWork;
 public class Tree {
 
     private Node root;
-    private int size = 0;
 
     public Tree(Board board){
         root = new Node(board);
