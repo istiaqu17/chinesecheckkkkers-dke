@@ -1,0 +1,1 @@
+Chinese checkers game made by students from DKE at Maastricht University
